@@ -37,7 +37,7 @@ export function CreateLink() {
     e.preventDefault();
     
     if (!url.trim()) {
-      toast.error('璇疯緭鍏ョ洰鏍嘦RL');
+      toast.error('请输入目标 URL');
       return;
     }
 
@@ -45,18 +45,18 @@ export function CreateLink() {
     try {
       new URL(url);
     } catch {
-      toast.error('璇疯緭鍏ユ湁鏁堢殑URL鏍煎紡');
+      toast.error('请输入有效的 URL 格式');
       return;
     }
 
     // Validate custom suffix if provided
     if (customSuffix && !/^[a-zA-Z0-9_-]+$/.test(customSuffix)) {
-      toast.error('鑷畾涔夊悗缂€鍙兘鍖呭惈瀛楁瘝銆佹暟瀛椼€佷笅鍒掔嚎鍜岃繛瀛楃');
+      toast.error('自定义后缀只能包含字母、数字、下划线和连字符');
       return;
     }
 
     if (customSuffix && (customSuffix.length < 3 || customSuffix.length > 32)) {
-      toast.error('鑷畾涔夊悗缂€闀垮害闇€鍦?-32浣嶄箣闂?);
+      toast.error('自定义后缀长度需在 3-32 位之间');
       return;
     }
 
@@ -72,10 +72,10 @@ export function CreateLink() {
     });
 
     if (result.success && result.link) {
-      toast.success('鐭摼鎺ュ垱寤烘垚鍔燂紒');
+      toast.success('短链接创建成功！');
       setCreatedLink(`${window.location.origin}/s/${result.link.shortCode}`);
     } else {
-      toast.error(result.error || '鍒涘缓澶辫触');
+      toast.error(result.error || '创建失败');
     }
 
     setIsSubmitting(false);
@@ -84,7 +84,7 @@ export function CreateLink() {
   const handleCopy = () => {
     if (createdLink) {
       navigator.clipboard.writeText(createdLink);
-      toast.success('閾炬帴宸插鍒跺埌鍓创鏉?);
+      toast.success('链接已复制到剪贴板');
     }
   };
 

@@ -32,17 +32,17 @@ export function Settings({ username }: SettingsProps) {
     e.preventDefault();
     
     if (!oldPassword || !newPassword || !confirmPassword) {
-      toast.error('璇峰～鍐欐墍鏈夊瓧娈?);
+      toast.error('请填写所有字段');
       return;
     }
 
     if (newPassword.length < 6) {
-      toast.error('鏂板瘑鐮侀暱搴﹁嚦灏?浣?);
+      toast.error('新密码长度至少 6 位');
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error('涓ゆ杈撳叆鐨勬柊瀵嗙爜涓嶄竴鑷?);
+      toast.error('两次输入的新密码不一致');
       return;
     }
 
@@ -54,10 +54,10 @@ export function Settings({ username }: SettingsProps) {
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
-      toast.success('瀵嗙爜淇敼鎴愬姛');
+      toast.success('密码修改成功');
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : '瀵嗙爜淇敼澶辫触');
+      toast.error(error instanceof Error ? error.message : '密码修改失败');
     }
 
     setIsSubmitting(false);

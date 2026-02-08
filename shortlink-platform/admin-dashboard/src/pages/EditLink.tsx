@@ -47,7 +47,7 @@ export function EditLink() {
         setDelay(result.link.delay || 5);
         setActive(result.link.active !== false);
       } else {
-        toast.error('閾炬帴涓嶅瓨鍦?);
+        toast.error('链接不存在');
         navigate('/links');
       }
       setIsLoading(false);
@@ -60,14 +60,14 @@ export function EditLink() {
     e.preventDefault();
     
     if (!url.trim()) {
-      toast.error('璇疯緭鍏ョ洰鏍嘦RL');
+      toast.error('请输入目标 URL');
       return;
     }
 
     try {
       new URL(url);
     } catch {
-      toast.error('璇疯緭鍏ユ湁鏁堢殑URL鏍煎紡');
+      toast.error('请输入有效的 URL 格式');
       return;
     }
 
@@ -85,10 +85,10 @@ export function EditLink() {
     });
 
     if (result.success) {
-      toast.success('閾炬帴鏇存柊鎴愬姛');
+      toast.success('短链接更新成功');
       navigate('/links');
     } else {
-      toast.error(result.error || '鏇存柊澶辫触');
+      toast.error(result.error || '更新失败');
     }
 
     setIsSubmitting(false);

@@ -61,7 +61,7 @@ export function Links() {
 
   const handleCopy = (shortUrl: string) => {
     navigator.clipboard.writeText(shortUrl);
-    toast.success('閾炬帴宸插鍒跺埌鍓创鏉?);
+    toast.success('链接已复制到剪贴板');
   };
 
   const handleDelete = async () => {
@@ -69,9 +69,9 @@ export function Links() {
     
     const result = await deleteLink(selectedLink);
     if (result.success) {
-      toast.success('鐭摼鎺ュ凡鍒犻櫎');
+      toast.success('短链接已删除');
     } else {
-      toast.error(result.error || '鍒犻櫎澶辫触');
+      toast.error(result.error || '删除失败');
     }
     setDeleteDialogOpen(false);
     setSelectedLink(null);
@@ -145,11 +145,11 @@ export function Links() {
                 <h3 className="text-lg font-medium text-foreground">暂无短链接</h3>
                 <p className="text-muted-foreground mt-1">创建您的第一个短链接开始使用</p>
                 <Link to="/links/new">
-                  <Button className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
-                    <Plus className="w-4 h-4 mr-2" />
-                    鍒涘缓閾炬帴
-                  </Button>
-                </Link>
+                    <Button className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
+                      <Plus className="w-4 h-4 mr-2" />
+                      创建链接
+                    </Button>
+                  </Link>
               </div>
             ) : (
               <>
@@ -162,7 +162,7 @@ export function Links() {
                         <TableHead>鏍囬</TableHead>
                         <TableHead>点击数</TableHead>
                         <TableHead>中间页</TableHead>
-                        <TableHead>鍒涘缓鏃堕棿</TableHead>
+                          <TableHead>创建时间</TableHead>
                         <TableHead className="w-12"></TableHead>
                       </TableRow>
                     </TableHeader>
