@@ -7,8 +7,8 @@ account_id = "a2aa832490a332300a12ac0c12ad49e6"
 
 # Environment Variables (secrets should be set via wrangler secret)
 [vars]
-BASE_URL = "https://your-worker.your-subdomain.workers.dev"
-ADMIN_DASHBOARD_URL = "https://your-admin-dashboard-url.pages.dev"
+BASE_URL = "https://6i.gg"
+ADMIN_DASHBOARD_URL = "https://6i.gg"
 
 [assets]
 directory = "../admin-dashboard/dist"
