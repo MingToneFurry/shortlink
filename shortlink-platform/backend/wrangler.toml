@@ -1,0 +1,30 @@
+# Cloudflare Worker Configuration for ShortLink Platform
+
+name = "shortlink-platform"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Environment Variables (secrets should be set via wrangler secret)
+[vars]
+BASE_URL = "https://your-worker.your-subdomain.workers.dev"
+ADMIN_DASHBOARD_URL = "https://your-admin-dashboard-url.pages.dev"
+
+# KV Namespaces
+[[kv_namespaces]]
+binding = "LINKS_KV"
+id = "your_links_kv_namespace_id"
+preview_id = "your_preview_links_kv_namespace_id"
+
+[[kv_namespaces]]
+binding = "ANALYTICS_KV"
+id = "your_analytics_kv_namespace_id"
+preview_id = "your_preview_analytics_kv_namespace_id"
+
+[[kv_namespaces]]
+binding = "ADMIN_KV"
+id = "your_admin_kv_namespace_id"
+preview_id = "your_preview_admin_kv_namespace_id"
+
+# Secrets (set these with wrangler secret put):
+# JWT_SECRET - Random string for JWT signing
+# Example: wrangler secret put JWT_SECRET

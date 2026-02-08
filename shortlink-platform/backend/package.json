@@ -1,0 +1,22 @@
+{
+  "name": "shortlink-platform-backend",
+  "version": "1.0.0",
+  "description": "ShortLink Platform - Cloudflare Worker Backend",
+  "main": "worker.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "keywords": [
+    "shortlink",
+    "url-shortener",
+    "cloudflare-workers",
+    "kv"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
