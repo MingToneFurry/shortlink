@@ -158,8 +158,8 @@ export function Links() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>短链接</TableHead>
-                        <TableHead>鐩爣鍦板潃</TableHead>
-                        <TableHead>鏍囬</TableHead>
+                        <TableHead>目标地址</TableHead>
+                        <TableHead>标题</TableHead>
                         <TableHead>点击数</TableHead>
                         <TableHead>中间页</TableHead>
                           <TableHead>创建时间</TableHead>

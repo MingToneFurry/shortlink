@@ -193,13 +193,13 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">系统状态</span>
                   <span className="px-2 py-1 bg-accent text-primary text-xs rounded-full font-medium">
-                    姝ｅ父杩愯
+                    正常运行
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">API 状态</span>
                   <span className="px-2 py-1 bg-accent text-primary text-xs rounded-full font-medium">
-                    鍦ㄧ嚎
+                    在线
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -210,7 +210,7 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">缓存服务</span>
                   <span className="px-2 py-1 bg-accent text-primary text-xs rounded-full font-medium">
-                    姝ｅ父
+                    正常
                   </span>
                 </div>
                 <div className="pt-4 border-t">
