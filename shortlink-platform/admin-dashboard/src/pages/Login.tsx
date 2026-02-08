@@ -39,7 +39,7 @@ export function Login({ onLogin }: LoginProps) {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center p-4"
+      className="min-h-screen flex items-center justify-center p-4 relative"
       style={{
         backgroundImage: 'url(https://api.furry.ist/furry-img)',
         backgroundSize: 'cover',
@@ -47,16 +47,22 @@ export function Login({ onLogin }: LoginProps) {
       }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-slate-900/35 backdrop-blur-sm" />
       
-      <Card className="w-full max-w-md relative z-10 shadow-2xl">
-        <CardHeader className="space-y-4 text-center">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center">
-            <Link2 className="w-8 h-8 text-white" />
+      <Card className="w-full max-w-md relative z-10 shadow-xl overflow-hidden gap-0">
+        <div className="flex items-center gap-2 px-4 py-3 border-b bg-muted/60">
+          <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+          <span className="h-2.5 w-2.5 rounded-full bg-teal-500" />
+          <span className="ml-auto text-xs text-muted-foreground">AUTH_GATE</span>
+        </div>
+        <CardHeader className="space-y-4 text-center pt-6">
+          <div className="mx-auto w-16 h-16 bg-primary rounded-xl flex items-center justify-center shadow-sm">
+            <Link2 className="w-8 h-8 text-primary-foreground" />
           </div>
           <div>
-            <CardTitle className="text-2xl font-bold">ShortLink Admin</CardTitle>
-            <CardDescription className="mt-2">
+            <CardTitle className="text-2xl font-bold text-foreground">ShortLink Admin</CardTitle>
+            <CardDescription className="mt-2 text-muted-foreground">
               登录管理后台以创建和管理短链接
             </CardDescription>
           </div>
@@ -98,7 +104,7 @@ export function Login({ onLogin }: LoginProps) {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -107,7 +113,7 @@ export function Login({ onLogin }: LoginProps) {
             
             <Button
               type="submit"
-              className="w-full h-11 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
+              className="w-full h-11 bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={isLoading}
             >
               {isLoading ? (

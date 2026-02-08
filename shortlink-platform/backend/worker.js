@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ShortLink Platform - Cloudflare Worker
  * 
  * Features:
@@ -35,13 +35,26 @@ const CONFIG = {
  * Interstitial page template with countdown
  */
 function getInterstitialTemplate(url, delay, title, description) {
+  const timestamp = new Date().toISOString();
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>即将跳转 - ${title || 'ShortLink'}</title>
+  <title>鍗冲皢璺宠浆 - ${title || 'ShortLink'}</title>
   <style>
+    :root {
+      --bg: #e8ebef;
+      --panel: #f5f6f8;
+      --panel-strong: #ebedef;
+      --border: #d8dce1;
+      --text: #2c3e50;
+      --muted: #64748b;
+      --accent: #0f766e;
+      --accent-strong: #0b5f57;
+      --accent-soft: #e7f2f1;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -49,207 +62,294 @@ function getInterstitialTemplate(url, delay, title, description) {
     }
     
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: Consolas, Monaco, "SF Mono", "JetBrains Mono", ui-monospace, "PingFang SC", "Microsoft YaHei", monospace;
+      background: var(--bg) url('https://api.furry.ist/furry-img/') center/cover fixed no-repeat;
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      position: relative;
+      overflow: auto;
     }
-    
-    .container {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      padding: 40px;
-      max-width: 500px;
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(232, 235, 239, 0.86);
+      backdrop-filter: blur(2px);
+      z-index: 0;
+    }
+
+    .t {
+      position: relative;
+      z-index: 1;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      max-width: 640px;
       width: 100%;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
     }
     
-    .logo {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 20px;
+    .h {
+      background: var(--panel-strong);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      gap: 8px;
+      border-radius: 10px 10px 0 0;
+      align-items: center;
+    }
+    
+    .d {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #cbd5e1;
+    }
+    
+    .d:nth-child(1) { background: #f59e0b; }
+    .d:nth-child(2) { background: #22c55e; }
+    .d:nth-child(3) { background: #0ea5a5; }
+    
+    .c {
+      padding: 40px 32px;
+    }
+    
+    .p {
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 20px;
+      font-size: 13px;
+      letter-spacing: 0.4px;
+    }
+    
+    .p::before { content: '> '; }
+    
+    .s {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+    
+    .i {
+      width: 48px;
+      height: 48px;
+      border: 2px solid var(--accent);
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 24px;
-      font-size: 36px;
-      color: white;
+      color: var(--accent);
     }
     
-    h1 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 12px;
+    .i svg {
+      width: 28px;
+      height: 28px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
     }
     
-    .description {
-      color: #666;
+    .e {
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+    
+    .m {
+      margin-bottom: 28px;
+    }
+    
+    .m h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    
+    .m p {
       font-size: 14px;
-      margin-bottom: 30px;
+      color: var(--muted);
       line-height: 1.6;
     }
     
-    .countdown-container {
-      margin: 30px 0;
+    .data {
+      background: #fff;
+      border: 1px solid #e8ecef;
+      border-radius: 6px;
+      padding: 18px;
+      margin-bottom: 24px;
     }
     
-    .countdown-ring {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto;
-      position: relative;
-    }
-    
-    .countdown-ring svg {
-      transform: rotate(-90deg);
-    }
-    
-    .countdown-ring circle {
-      fill: none;
-      stroke-width: 8;
-    }
-    
-    .countdown-ring .bg {
-      stroke: #e0e0e0;
-    }
-    
-    .countdown-ring .progress {
-      stroke: url(#gradient);
-      stroke-linecap: round;
-      transition: stroke-dashoffset 1s linear;
-    }
-    
-    .countdown-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 36px;
-      font-weight: bold;
-      color: #667eea;
-    }
-    
-    .destination {
-      background: #f5f5f5;
-      border-radius: 12px;
-      padding: 16px;
-      margin: 24px 0;
-      word-break: break-all;
+    .r {
+      display: flex;
+      padding: 10px 0;
       font-size: 13px;
-      color: #666;
     }
     
-    .destination-label {
-      font-size: 12px;
-      color: #999;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .r:not(:last-child) { border-bottom: 1px solid #f1f3f5; }
+    
+    .k {
+      color: #94a3b8;
+      min-width: 110px;
     }
     
-    .destination-url {
-      color: #667eea;
-      text-decoration: none;
+    .k::after { content: ':'; margin-right: 12px; }
+    
+    .v {
+      color: var(--accent);
+      word-break: break-all;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
     }
     
     .btn {
-      display: inline-block;
-      padding: 14px 32px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      background: var(--accent);
       color: white;
       text-decoration: none;
-      border-radius: 30px;
+      border-radius: 999px;
       font-weight: 600;
-      border: none;
+      border: 1px solid var(--accent);
       cursor: pointer;
-      font-size: 16px;
-      transition: transform 0.2s, box-shadow 0.2s;
+      font-size: 14px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
     }
     
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
     }
     
     .btn-skip {
       background: transparent;
-      color: #667eea;
-      border: 2px solid #667eea;
-      margin-top: 12px;
+      color: var(--accent);
     }
     
-    .footer {
-      margin-top: 30px;
+    .btn-skip:hover { background: var(--accent-soft); }
+    
+    .f {
+      margin-top: 24px;
       font-size: 12px;
-      color: #999;
+      color: var(--muted);
+      text-align: right;
     }
     
-    .footer a {
-      color: #667eea;
-      text-decoration: none;
+    .f a { color: var(--accent); text-decoration: none; }
+    
+    .cur {
+      display: inline-block;
+      width: 8px;
+      height: 2px;
+      background: var(--accent);
+      margin-left: 4px;
+      animation: b 1s step-end infinite;
+      vertical-align: text-top;
+      transform: translateY(12px);
+    }
+    
+    @keyframes b { 50% { opacity: 0; } }
+    
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+      }
+      
+      .t {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      
+      .c {
+        padding: 32px 20px;
+        flex: 1;
+      }
+      
+      .s { flex-direction: column; align-items: flex-start; }
+      .e { font-size: 48px; }
+      .m h1 { font-size: 18px; }
+      .r { flex-direction: column; gap: 4px; }
+      .k { min-width: auto; }
+      .f { text-align: right; }
+      .actions { flex-direction: column; }
+      .btn { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <svg width="0" height="0">
-    <defs>
-      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color:#667eea"/>
-        <stop offset="100%" style="stop-color:#764ba2"/>
-      </linearGradient>
-    </defs>
-  </svg>
-  
-  <div class="container">
-    <div class="logo">🔗</div>
-    <h1>${title || '即将离开本站'}</h1>
-    <p class="description">${description || '您即将访问外部链接，请注意账号和财产安全'}</p>
-    
-    <div class="countdown-container">
-      <div class="countdown-ring">
-        <svg width="120" height="120">
-          <circle class="bg" cx="60" cy="60" r="52"></circle>
-          <circle class="progress" cx="60" cy="60" r="52" 
-                  stroke-dasharray="326.73" 
-                  stroke-dashoffset="0"></circle>
-        </svg>
-        <div class="countdown-text" id="countdown">${delay}</div>
+  <div class="t">
+    <div class="h">
+      <span class="d"></span>
+      <span class="d"></span>
+      <span class="d"></span>
+    </div>
+    <div class="c">
+      <div class="p">REDIRECT_PENDING<span class="cur"></span></div>
+      <div class="s">
+        <div class="i">
+          <svg viewBox="0 0 24 24">
+            <path d="M5 12h10"/>
+            <path d="M13 6l6 6-6 6"/>
+          </svg>
+        </div>
+        <div class="e" id="countdown">${delay}</div>
+      </div>
+      <div class="m">
+        <h1>${title || '鍗冲皢璺宠浆'}</h1>
+        <p>${description || '鎮ㄥ嵬灏嗚闂閮ㄩ摼鎺ワ紝璇锋敞鎰忚处鍙峰拰璐骇瀹夊叏'}</p>
+      </div>
+      <div class="data">
+        <div class="r">
+          <span class="k">target_url</span>
+          <span class="v">${url}</span>
+        </div>
+        <div class="r">
+          <span class="k">delay</span>
+          <span class="v">${delay}s</span>
+        </div>
+        <div class="r">
+          <span class="k">timestamp</span>
+          <span class="v">${timestamp}</span>
+        </div>
+      </div>
+      <div class="actions">
+        <a href="${url}" class="btn" id="redirect-btn">绔嬪嵆璺宠浆</a>
+        <button class="btn btn-skip" onclick="skipCountdown()">璺宠繃绛夊緟</button>
+      </div>
+      <div class="f">
+        Powered by <a href="/">ShortLink Platform</a>
       </div>
     </div>
-    
-    <div class="destination">
-      <div class="destination-label">目标地址</div>
-      <a href="${url}" class="destination-url">${url}</a>
-    </div>
-    
-    <a href="${url}" class="btn" id="redirect-btn">立即跳转</a>
-    <br>
-    <button class="btn btn-skip" onclick="skipCountdown()">跳过等待</button>
-    
-    <div class="footer">
-      Powered by <a href="/">ShortLink Platform</a>
-    </div>
   </div>
-  
   <script>
     let countdown = ${delay};
-    const totalTime = ${delay};
     const countdownEl = document.getElementById('countdown');
-    const progressEl = document.querySelector('.progress');
-    const circumference = 2 * Math.PI * 52;
-    
+
     function updateCountdown() {
       countdown--;
       countdownEl.textContent = countdown;
-      
-      const offset = circumference - (countdown / totalTime) * circumference;
-      progressEl.style.strokeDashoffset = offset;
-      
       if (countdown <= 0) {
         window.location.href = '${url}';
       }
@@ -261,7 +361,7 @@ function getInterstitialTemplate(url, delay, title, description) {
     
     const timer = setInterval(updateCountdown, 1000);
     
-    document.getElementById('redirect-btn').addEventListener('click', function(e) {
+    document.getElementById('redirect-btn').addEventListener('click', function() {
       clearInterval(timer);
     });
   </script>
@@ -273,13 +373,26 @@ function getInterstitialTemplate(url, delay, title, description) {
  * Error page template
  */
 function getErrorTemplate(message, code = 404) {
+  const timestamp = new Date().toISOString();
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>错误 - ${code}</title>
+  <title>閿欒 - ${code}</title>
   <style>
+    :root {
+      --bg: #e8ebef;
+      --panel: #f5f6f8;
+      --panel-strong: #ebedef;
+      --border: #d8dce1;
+      --text: #2c3e50;
+      --muted: #64748b;
+      --accent: #b45309;
+      --accent-strong: #92400e;
+      --accent-soft: #f3e8d6;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -287,61 +400,236 @@ function getErrorTemplate(message, code = 404) {
     }
     
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      font-family: Consolas, Monaco, "SF Mono", "JetBrains Mono", ui-monospace, "PingFang SC", "Microsoft YaHei", monospace;
+      background: var(--bg);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      color: var(--text);
     }
     
-    .container {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      padding: 40px;
-      max-width: 400px;
+    .t {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      max-width: 520px;
       width: 100%;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
     }
-    
-    .error-code {
-      font-size: 80px;
-      font-weight: bold;
-      color: #ee5a6f;
+
+    .h {
+      background: var(--panel-strong);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      gap: 8px;
+      border-radius: 10px 10px 0 0;
+      align-items: center;
+    }
+
+    .d {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #cbd5e1;
+    }
+
+    .d:nth-child(1) { background: #f59e0b; }
+    .d:nth-child(2) { background: #22c55e; }
+    .d:nth-child(3) { background: #0ea5a5; }
+
+    .c {
+      padding: 40px 32px;
+    }
+
+    .p {
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 20px;
+      font-size: 13px;
+      letter-spacing: 0.4px;
+    }
+
+    .p::before { content: '> '; }
+
+    .s {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+
+    .i {
+      width: 48px;
+      height: 48px;
+      border: 2px solid var(--accent);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+    }
+
+    .i svg {
+      width: 28px;
+      height: 28px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .e {
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--accent);
       line-height: 1;
-      margin-bottom: 16px;
     }
-    
-    h1 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 12px;
+
+    .m {
+      margin-bottom: 28px;
     }
-    
-    p {
-      color: #666;
+
+    .m h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .m p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .data {
+      background: #fff;
+      border: 1px solid #e8ecef;
+      border-radius: 6px;
+      padding: 18px;
       margin-bottom: 24px;
     }
-    
+
+    .r {
+      display: flex;
+      padding: 10px 0;
+      font-size: 13px;
+    }
+
+    .r:not(:last-child) { border-bottom: 1px solid #f1f3f5; }
+
+    .k {
+      color: #94a3b8;
+      min-width: 110px;
+    }
+
+    .k::after { content: ':'; margin-right: 12px; }
+
+    .v {
+      color: var(--accent);
+      word-break: break-all;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
     .btn {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 12px 24px;
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      background: var(--accent);
       color: white;
       text-decoration: none;
-      border-radius: 25px;
+      border-radius: 999px;
       font-weight: 600;
+      border: 1px solid var(--accent);
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
+    }
+
+    .cur {
+      display: inline-block;
+      width: 8px;
+      height: 2px;
+      background: var(--accent);
+      margin-left: 4px;
+      animation: b 1s step-end infinite;
+      vertical-align: text-top;
+      transform: translateY(12px);
+    }
+
+    @keyframes b { 50% { opacity: 0; } }
+
+    @media (max-width: 480px) {
+      body { padding: 0; }
+      .t {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      .c { padding: 32px 20px; flex: 1; }
+      .s { flex-direction: column; align-items: flex-start; }
+      .e { font-size: 48px; }
+      .m h1 { font-size: 18px; }
+      .r { flex-direction: column; gap: 4px; }
+      .k { min-width: auto; }
+      .actions { flex-direction: column; }
+      .btn { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="error-code">${code}</div>
-    <h1>出错了</h1>
-    <p>${message}</p>
-    <a href="/" class="btn">返回首页</a>
+  <div class="t">
+    <div class="h">
+      <span class="d"></span>
+      <span class="d"></span>
+      <span class="d"></span>
+    </div>
+    <div class="c">
+      <div class="p">REQUEST_DENIED<span class="cur"></span></div>
+      <div class="s">
+        <div class="i">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2L4 6v5c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6z"/>
+            <path d="M15 9l-6 6M9 9l6 6"/>
+          </svg>
+        </div>
+        <div class="e">${code}</div>
+      </div>
+      <div class="m">
+        <h1>璇锋眰澶辫触</h1>
+        <p>${message}</p>
+      </div>
+      <div class="data">
+        <div class="r">
+          <span class="k">error_code</span>
+          <span class="v">${code}</span>
+        </div>
+        <div class="r">
+          <span class="k">timestamp</span>
+          <span class="v">${timestamp}</span>
+        </div>
+      </div>
+      <div class="actions">
+        <a href="/" class="btn">杩斿洖棣栭〉</a>
+      </div>
+    </div>
   </div>
 </body>
 </html>`;
@@ -564,7 +852,7 @@ async function serveAdminApp(request, env) {
     if (env.ADMIN_DASHBOARD_URL) {
       return redirectResponse(env.ADMIN_DASHBOARD_URL);
     }
-    return htmlResponse(getErrorTemplate('管理后台未配置', 500), 500);
+    return htmlResponse(getErrorTemplate('绠＄悊鍚庡彴鏈厤缃?, 500), 500);
   }
 
   const url = new URL(request.url);
@@ -859,12 +1147,12 @@ async function handleLogin(env, request) {
   const { username, password } = await request.json();
   
   if (!username || !password) {
-    return jsonResponse({ error: '用户名和密码不能为空' }, 400);
+    return jsonResponse({ error: '鐢ㄦ埛鍚嶅拰瀵嗙爜涓嶈兘涓虹┖' }, 400);
   }
   
   const isValid = await authenticateAdmin(env, username, password);
   if (!isValid) {
-    return jsonResponse({ error: '用户名或密码错误' }, 401);
+    return jsonResponse({ error: '鐢ㄦ埛鍚嶆垨瀵嗙爜閿欒' }, 401);
   }
   
   const token = await generateToken({
@@ -881,20 +1169,20 @@ async function handleLogin(env, request) {
 async function handleCreateLink(env, request) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '未授权' }, 401);
+    return jsonResponse({ error: '鏈巿鏉? }, 401);
   }
   
   const { url, customSuffix, title, description, showInterstitial, delay, expiresAt } = await request.json();
   
   if (!url) {
-    return jsonResponse({ error: 'URL不能为空' }, 400);
+    return jsonResponse({ error: 'URL涓嶈兘涓虹┖' }, 400);
   }
   
   // Validate URL
   try {
     new URL(url);
   } catch (e) {
-    return jsonResponse({ error: '无效的URL格式' }, 400);
+    return jsonResponse({ error: '鏃犳晥鐨刄RL鏍煎紡' }, 400);
   }
   
   let shortCode = customSuffix;
@@ -909,12 +1197,12 @@ async function handleCreateLink(env, request) {
   } else {
     // Validate custom suffix
     if (!isValidSuffix(shortCode)) {
-      return jsonResponse({ error: '自定义后缀只能包含字母、数字、下划线和连字符，长度3-32位' }, 400);
+      return jsonResponse({ error: '鑷畾涔夊悗缂€鍙兘鍖呭惈瀛楁瘝銆佹暟瀛椼€佷笅鍒掔嚎鍜岃繛瀛楃锛岄暱搴?-32浣? }, 400);
     }
     
     // Check if suffix is available
     if (await getLink(env, shortCode)) {
-      return jsonResponse({ error: '该后缀已被使用' }, 409);
+      return jsonResponse({ error: '璇ュ悗缂€宸茶浣跨敤' }, 409);
     }
   }
   
@@ -945,12 +1233,12 @@ async function handleCreateLink(env, request) {
 async function handleUpdateLink(env, request, shortCode) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '未授权' }, 401);
+    return jsonResponse({ error: '鏈巿鏉? }, 401);
   }
   
   const link = await getLink(env, shortCode);
   if (!link) {
-    return jsonResponse({ error: '短链接不存在' }, 404);
+    return jsonResponse({ error: '鐭摼鎺ヤ笉瀛樺湪' }, 404);
   }
   
   const { url, title, description, showInterstitial, delay, expiresAt, active } = await request.json();
@@ -960,7 +1248,7 @@ async function handleUpdateLink(env, request, shortCode) {
       new URL(url);
       link.url = url;
     } catch (e) {
-      return jsonResponse({ error: '无效的URL格式' }, 400);
+      return jsonResponse({ error: '鏃犳晥鐨刄RL鏍煎紡' }, 400);
     }
   }
   
@@ -988,12 +1276,12 @@ async function handleUpdateLink(env, request, shortCode) {
 async function handleDeleteLink(env, request, shortCode) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '未授权' }, 401);
+    return jsonResponse({ error: '鏈巿鏉? }, 401);
   }
   
   const link = await getLink(env, shortCode);
   if (!link) {
-    return jsonResponse({ error: '短链接不存在' }, 404);
+    return jsonResponse({ error: '鐭摼鎺ヤ笉瀛樺湪' }, 404);
   }
   
   await deleteLink(env, shortCode);
@@ -1004,7 +1292,7 @@ async function handleDeleteLink(env, request, shortCode) {
     await env.ANALYTICS_KV.delete(key.name);
   }
   
-  return jsonResponse({ success: true, message: '短链接已删除' });
+  return jsonResponse({ success: true, message: '鐭摼鎺ュ凡鍒犻櫎' });
 }
 
 /**
@@ -1013,12 +1301,12 @@ async function handleDeleteLink(env, request, shortCode) {
 async function handleGetLink(env, request, shortCode) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '未授权' }, 401);
+    return jsonResponse({ error: '鏈巿鏉? }, 401);
   }
   
   const link = await getLink(env, shortCode);
   if (!link) {
-    return jsonResponse({ error: '短链接不存在' }, 404);
+    return jsonResponse({ error: '鐭摼鎺ヤ笉瀛樺湪' }, 404);
   }
   
   return jsonResponse({
@@ -1033,7 +1321,7 @@ async function handleGetLink(env, request, shortCode) {
 async function handleListLinks(env, request) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '未授权' }, 401);
+    return jsonResponse({ error: '鏈巿鏉? }, 401);
   }
   
   const url = new URL(request.url);
@@ -1051,7 +1339,7 @@ async function handleListLinks(env, request) {
 async function handleGetAnalytics(env, request, shortCode) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '未授权' }, 401);
+    return jsonResponse({ error: '鏈巿鏉? }, 401);
   }
   
   const url = new URL(request.url);
@@ -1068,7 +1356,7 @@ async function handleGetAnalytics(env, request, shortCode) {
 async function handleGetStats(env, request) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '未授权' }, 401);
+    return jsonResponse({ error: '鏈巿鏉? }, 401);
   }
   
   const stats = await getDashboardStats(env);
@@ -1082,22 +1370,22 @@ async function handleGetStats(env, request) {
 async function handleChangePassword(env, request) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '未授权' }, 401);
+    return jsonResponse({ error: '鏈巿鏉? }, 401);
   }
   
   const { oldPassword, newPassword } = await request.json();
   
   if (!oldPassword || !newPassword) {
-    return jsonResponse({ error: '请提供旧密码和新密码' }, 400);
+    return jsonResponse({ error: '璇锋彁渚涙棫瀵嗙爜鍜屾柊瀵嗙爜' }, 400);
   }
   
   if (newPassword.length < 6) {
-    return jsonResponse({ error: '新密码长度至少6位' }, 400);
+    return jsonResponse({ error: '鏂板瘑鐮侀暱搴﹁嚦灏?浣? }, 400);
   }
   
   const isValid = await authenticateAdmin(env, admin.username, oldPassword);
   if (!isValid) {
-    return jsonResponse({ error: '旧密码错误' }, 400);
+    return jsonResponse({ error: '鏃у瘑鐮侀敊璇? }, 400);
   }
   
   const adminData = await env.ADMIN_KV.get(`admin:user:${admin.username}`);
@@ -1107,7 +1395,7 @@ async function handleChangePassword(env, request) {
   
   await env.ADMIN_KV.put(`admin:user:${admin.username}`, JSON.stringify(adminUser));
   
-  return jsonResponse({ success: true, message: '密码修改成功' });
+  return jsonResponse({ success: true, message: '瀵嗙爜淇敼鎴愬姛' });
 }
 
 // ==================== Main Request Handler ====================
@@ -1192,17 +1480,17 @@ export default {
       const link = await getLink(env, shortCode);
       
       if (!link) {
-        return htmlResponse(getErrorTemplate('该短链接不存在或已过期', 404), 404);
+        return htmlResponse(getErrorTemplate('璇ョ煭閾炬帴涓嶅瓨鍦ㄦ垨宸茶繃鏈?, 404), 404);
       }
       
       // Check if expired
       if (link.expiresAt && Date.now() > link.expiresAt) {
-        return htmlResponse(getErrorTemplate('该短链接已过期', 410), 410);
+        return htmlResponse(getErrorTemplate('璇ョ煭閾炬帴宸茶繃鏈?, 410), 410);
       }
       
       // Check if inactive
       if (link.active === false) {
-        return htmlResponse(getErrorTemplate('该短链接已被禁用', 403), 403);
+        return htmlResponse(getErrorTemplate('璇ョ煭閾炬帴宸茶绂佺敤', 403), 403);
       }
       
       // Record click (fire and forget)
@@ -1225,3 +1513,5 @@ export default {
     return serveAdminApp(request, env);
   }
 };
+
+

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useLinks } from '@/hooks/useLinks';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -61,7 +61,7 @@ export function Links() {
 
   const handleCopy = (shortUrl: string) => {
     navigator.clipboard.writeText(shortUrl);
-    toast.success('链接已复制到剪贴板');
+    toast.success('閾炬帴宸插鍒跺埌鍓创鏉?);
   };
 
   const handleDelete = async () => {
@@ -69,9 +69,9 @@ export function Links() {
     
     const result = await deleteLink(selectedLink);
     if (result.success) {
-      toast.success('短链接已删除');
+      toast.success('鐭摼鎺ュ凡鍒犻櫎');
     } else {
-      toast.error(result.error || '删除失败');
+      toast.error(result.error || '鍒犻櫎澶辫触');
     }
     setDeleteDialogOpen(false);
     setSelectedLink(null);
@@ -88,17 +88,17 @@ export function Links() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-50">
+      <header className="bg-card border-b border-border sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
               <Link to="/" className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
-                  <Link2 className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-sm">
+                  <Link2 className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold text-foreground">
                   ShortLink Admin
                 </h1>
               </Link>
@@ -106,9 +106,9 @@ export function Links() {
             
             <div className="flex items-center gap-4">
               <Link to="/links/new">
-                <Button className="bg-gradient-to-r from-purple-500 to-blue-500">
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                   <Plus className="w-4 h-4 mr-2" />
-                  创建链接
+                  鍒涘缓閾炬帴
                 </Button>
               </Link>
             </div>
@@ -120,11 +120,11 @@ export function Links() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card>
           <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <CardTitle>短链接管理</CardTitle>
+            <CardTitle>鐭摼鎺ョ鐞?/CardTitle>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder="搜索链接..."
+                placeholder="鎼滅储閾炬帴..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 w-full sm:w-64"
@@ -135,19 +135,19 @@ export function Links() {
           <CardContent>
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
             ) : filteredLinks.length === 0 ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Link2 className="w-8 h-8 text-gray-400" />
+                <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Link2 className="w-8 h-8 text-muted-foreground" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">暂无短链接</h3>
-                <p className="text-gray-500 mt-1">创建您的第一个短链接开始使用</p>
+                <h3 className="text-lg font-medium text-foreground">鏆傛棤鐭摼鎺?/h3>
+                <p className="text-muted-foreground mt-1">鍒涘缓鎮ㄧ殑绗竴涓煭閾炬帴寮€濮嬩娇鐢?/p>
                 <Link to="/links/new">
-                  <Button className="mt-4 bg-gradient-to-r from-purple-500 to-blue-500">
+                  <Button className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
                     <Plus className="w-4 h-4 mr-2" />
-                    创建链接
+                    鍒涘缓閾炬帴
                   </Button>
                 </Link>
               </div>
@@ -157,12 +157,12 @@ export function Links() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>短链接</TableHead>
-                        <TableHead>目标地址</TableHead>
-                        <TableHead>标题</TableHead>
-                        <TableHead>点击数</TableHead>
-                        <TableHead>中间页</TableHead>
-                        <TableHead>创建时间</TableHead>
+                        <TableHead>鐭摼鎺?/TableHead>
+                        <TableHead>鐩爣鍦板潃</TableHead>
+                        <TableHead>鏍囬</TableHead>
+                        <TableHead>鐐瑰嚮鏁?/TableHead>
+                        <TableHead>涓棿椤?/TableHead>
+                        <TableHead>鍒涘缓鏃堕棿</TableHead>
                         <TableHead className="w-12"></TableHead>
                       </TableRow>
                     </TableHeader>
@@ -173,7 +173,7 @@ export function Links() {
                           <TableRow key={link.shortCode}>
                             <TableCell>
                               <div className="flex items-center gap-2">
-                                <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
+                                <span className="font-mono text-sm bg-accent px-2 py-1 rounded">
                                   /s/{link.shortCode}
                                 </span>
                                 <Button
@@ -191,13 +191,13 @@ export function Links() {
                                 href={link.url} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="text-sm text-blue-600 hover:underline truncate max-w-xs block"
+                                className="text-sm text-primary hover:underline truncate max-w-xs block"
                               >
                                 {link.url}
                               </a>
                             </TableCell>
                             <TableCell>
-                              <span className="text-sm text-gray-700">
+                              <span className="text-sm text-foreground">
                                 {link.title || '-'}
                               </span>
                             </TableCell>
@@ -208,19 +208,19 @@ export function Links() {
                             </TableCell>
                             <TableCell>
                               {link.showInterstitial ? (
-                                <div className="flex items-center gap-1 text-amber-600">
+                                <div className="flex items-center gap-1 text-primary">
                                   <Eye className="w-4 h-4" />
                                   <span className="text-xs">{link.delay || 5}s</span>
                                 </div>
                               ) : (
-                                <div className="flex items-center gap-1 text-green-600">
+                                <div className="flex items-center gap-1 text-muted-foreground">
                                   <EyeOff className="w-4 h-4" />
-                                  <span className="text-xs">直接跳转</span>
+                                  <span className="text-xs">鐩存帴璺宠浆</span>
                                 </div>
                               )}
                             </TableCell>
                             <TableCell>
-                              <span className="text-sm text-gray-500">
+                              <span className="text-sm text-muted-foreground">
                                 {formatDate(link.createdAt)}
                               </span>
                             </TableCell>
@@ -234,29 +234,29 @@ export function Links() {
                                 <DropdownMenuContent align="end">
                                   <DropdownMenuItem onClick={() => handleCopy(shortUrl)}>
                                     <Copy className="w-4 h-4 mr-2" />
-                                    复制链接
+                                    澶嶅埗閾炬帴
                                   </DropdownMenuItem>
                                   <DropdownMenuItem onClick={() => window.open(shortUrl, '_blank')}>
                                     <ExternalLink className="w-4 h-4 mr-2" />
-                                    访问链接
+                                    璁块棶閾炬帴
                                   </DropdownMenuItem>
                                   <DropdownMenuItem onClick={() => navigate(`/analytics/${link.shortCode}`)}>
                                     <BarChart3 className="w-4 h-4 mr-2" />
-                                    查看数据
+                                    鏌ョ湅鏁版嵁
                                   </DropdownMenuItem>
                                   <DropdownMenuItem onClick={() => navigate(`/links/${link.shortCode}/edit`)}>
                                     <Edit className="w-4 h-4 mr-2" />
-                                    编辑
+                                    缂栬緫
                                   </DropdownMenuItem>
                                   <DropdownMenuItem 
-                                    className="text-red-600"
+                                    className="text-destructive"
                                     onClick={() => {
                                       setSelectedLink(link.shortCode);
                                       setDeleteDialogOpen(true);
                                     }}
                                   >
                                     <Trash2 className="w-4 h-4 mr-2" />
-                                    删除
+                                    鍒犻櫎
                                   </DropdownMenuItem>
                                 </DropdownMenuContent>
                               </DropdownMenu>
@@ -271,10 +271,9 @@ export function Links() {
                 {/* Pagination */}
                 {pagination && pagination.totalPages > 1 && (
                   <div className="flex items-center justify-between mt-6">
-                    <p className="text-sm text-gray-500">
-                      显示 {(page - 1) * 20 + 1} - {Math.min(page * 20, pagination.total)} 条，
-                      共 {pagination.total} 条
-                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      鏄剧ず {(page - 1) * 20 + 1} - {Math.min(page * 20, pagination.total)} 鏉★紝
+                      鍏?{pagination.total} 鏉?                    </p>
                     <div className="flex items-center gap-2">
                       <Button
                         variant="outline"
@@ -284,7 +283,7 @@ export function Links() {
                       >
                         <ChevronLeft className="w-4 h-4" />
                       </Button>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-muted-foreground">
                         {page} / {pagination.totalPages}
                       </span>
                       <Button
@@ -308,17 +307,16 @@ export function Links() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>确认删除</DialogTitle>
+            <DialogTitle>纭鍒犻櫎</DialogTitle>
             <DialogDescription>
-              确定要删除短链接 <code>/s/{selectedLink}</code> 吗？此操作不可撤销。
-            </DialogDescription>
+              纭畾瑕佸垹闄ょ煭閾炬帴 <code>/s/{selectedLink}</code> 鍚楋紵姝ゆ搷浣滀笉鍙挙閿€銆?            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
-              取消
+              鍙栨秷
             </Button>
             <Button variant="destructive" onClick={handleDelete}>
-              删除
+              鍒犻櫎
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -326,3 +324,4 @@ export function Links() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useLinks } from '@/hooks/useLinks';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,7 +47,7 @@ export function EditLink() {
         setDelay(result.link.delay || 5);
         setActive(result.link.active !== false);
       } else {
-        toast.error('链接不存在');
+        toast.error('閾炬帴涓嶅瓨鍦?);
         navigate('/links');
       }
       setIsLoading(false);
@@ -60,14 +60,14 @@ export function EditLink() {
     e.preventDefault();
     
     if (!url.trim()) {
-      toast.error('请输入目标URL');
+      toast.error('璇疯緭鍏ョ洰鏍嘦RL');
       return;
     }
 
     try {
       new URL(url);
     } catch {
-      toast.error('请输入有效的URL格式');
+      toast.error('璇疯緭鍏ユ湁鏁堢殑URL鏍煎紡');
       return;
     }
 
@@ -85,10 +85,10 @@ export function EditLink() {
     });
 
     if (result.success) {
-      toast.success('链接更新成功');
+      toast.success('閾炬帴鏇存柊鎴愬姛');
       navigate('/links');
     } else {
-      toast.error(result.error || '更新失败');
+      toast.error(result.error || '鏇存柊澶辫触');
     }
 
     setIsSubmitting(false);
@@ -96,24 +96,24 @@ export function EditLink() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-10 h-10 animate-spin text-purple-500" />
+      <div className="min-h-screen bg-accent flex items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-50">
+      <header className="bg-card border-b border-border sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
               <Link to="/" className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
-                  <Link2 className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-sm">
+                  <Link2 className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold text-foreground">
                   ShortLink Admin
                 </h1>
               </Link>
@@ -122,7 +122,7 @@ export function EditLink() {
             <Link to="/links">
               <Button variant="ghost">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                返回列表
+                杩斿洖鍒楄〃
               </Button>
             </Link>
           </div>
@@ -134,7 +134,7 @@ export function EditLink() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>编辑短链接</CardTitle>
+              <CardTitle>缂栬緫鐭摼鎺?/CardTitle>
               <Badge variant="outline" className="font-mono text-lg">
                 /s/{shortCode}
               </Badge>
@@ -146,7 +146,7 @@ export function EditLink() {
               {/* URL Input */}
               <div className="space-y-2">
                 <Label htmlFor="url">
-                  目标 URL <span className="text-red-500">*</span>
+                  鐩爣 URL <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="url"
@@ -161,10 +161,10 @@ export function EditLink() {
 
               {/* Title */}
               <div className="space-y-2">
-                <Label htmlFor="title">标题（可选）</Label>
+                <Label htmlFor="title">鏍囬锛堝彲閫夛級</Label>
                 <Input
                   id="title"
-                  placeholder="链接标题"
+                  placeholder="閾炬帴鏍囬"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   disabled={isSubmitting}
@@ -174,10 +174,10 @@ export function EditLink() {
 
               {/* Description */}
               <div className="space-y-2">
-                <Label htmlFor="description">描述（可选）</Label>
+                <Label htmlFor="description">鎻忚堪锛堝彲閫夛級</Label>
                 <Input
                   id="description"
-                  placeholder="链接描述，将显示在中间页面"
+                  placeholder="閾炬帴鎻忚堪锛屽皢鏄剧ず鍦ㄤ腑闂撮〉闈?
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   disabled={isSubmitting}
@@ -189,17 +189,16 @@ export function EditLink() {
               <div className="flex items-center justify-between border rounded-lg p-4">
                 <div className="flex items-center gap-2">
                   {active ? (
-                    <Check className="w-5 h-5 text-green-500" />
+                    <Check className="w-5 h-5 text-primary" />
                   ) : (
-                    <X className="w-5 h-5 text-red-500" />
+                    <X className="w-5 h-5 text-destructive" />
                   )}
                   <Label htmlFor="active" className="cursor-pointer">
-                    链接状态
-                  </Label>
+                    閾炬帴鐘舵€?                  </Label>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`text-sm ${active ? 'text-green-600' : 'text-red-600'}`}>
-                    {active ? '已启用' : '已禁用'}
+                  <span className={`text-sm ${active ? 'text-primary' : 'text-destructive'}`}>
+                    {active ? '宸插惎鐢? : '宸茬鐢?}
                   </span>
                   <Switch
                     id="active"
@@ -215,12 +214,12 @@ export function EditLink() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {showInterstitial ? (
-                      <Eye className="w-5 h-5 text-purple-500" />
+                      <Eye className="w-5 h-5 text-primary" />
                     ) : (
-                      <EyeOff className="w-5 h-5 text-gray-400" />
+                      <EyeOff className="w-5 h-5 text-muted-foreground" />
                     )}
                     <Label htmlFor="interstitial" className="cursor-pointer">
-                      显示中间页面
+                      鏄剧ず涓棿椤甸潰
                     </Label>
                   </div>
                   <Switch
@@ -235,10 +234,9 @@ export function EditLink() {
                   <div className="space-y-3 pt-2 border-t">
                     <div className="flex items-center justify-between">
                       <Label className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-400" />
-                        倒计时时间
-                      </Label>
-                      <Badge variant="secondary">{delay} 秒</Badge>
+                        <Clock className="w-4 h-4 text-muted-foreground" />
+                        鍊掕鏃舵椂闂?                      </Label>
+                      <Badge variant="secondary">{delay} 绉?/Badge>
                     </div>
                     <Slider
                       value={[delay]}
@@ -256,21 +254,21 @@ export function EditLink() {
               <div className="flex items-center gap-4 pt-4">
                 <Link to="/links" className="flex-1">
                   <Button variant="outline" className="w-full" disabled={isSubmitting}>
-                    取消
+                    鍙栨秷
                   </Button>
                 </Link>
                 <Button 
                   type="submit" 
-                  className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500"
+                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      保存中...
+                      淇濆瓨涓?..
                     </>
                   ) : (
-                    '保存修改'
+                    '淇濆瓨淇敼'
                   )}
                 </Button>
               </div>
@@ -281,3 +279,4 @@ export function EditLink() {
     </div>
   );
 }
+

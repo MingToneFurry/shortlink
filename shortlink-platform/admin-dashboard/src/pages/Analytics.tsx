@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useLinks } from '@/hooks/useLinks';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,7 +42,7 @@ import {
   Area
 } from 'recharts';
 
-const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00C49F', '#FFBB28'];
+const COLORS = ['#0f766e', '#1d4ed8', '#b45309', '#16a34a', '#0ea5a5', '#64748b'];
 
 export function Analytics() {
   const { shortCode } = useParams<{ shortCode: string }>();
@@ -62,17 +62,17 @@ export function Analytics() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-50">
+      <header className="bg-card border-b border-border sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
               <Link to="/" className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
-                  <Link2 className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-sm">
+                  <Link2 className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold text-foreground">
                   ShortLink Admin
                 </h1>
               </Link>
@@ -81,19 +81,19 @@ export function Analytics() {
             <div className="flex items-center gap-4">
               <Select value={days} onValueChange={setDays}>
                 <SelectTrigger className="w-32">
-                  <SelectValue placeholder="时间范围" />
+                  <SelectValue placeholder="鏃堕棿鑼冨洿" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="7">最近7天</SelectItem>
-                  <SelectItem value="30">最近30天</SelectItem>
-                  <SelectItem value="90">最近90天</SelectItem>
+                  <SelectItem value="7">鏈€杩?澶?/SelectItem>
+                  <SelectItem value="30">鏈€杩?0澶?/SelectItem>
+                  <SelectItem value="90">鏈€杩?0澶?/SelectItem>
                 </SelectContent>
               </Select>
               
               <Link to="/links">
                 <Button variant="ghost">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  返回列表
+                  杩斿洖鍒楄〃
                 </Button>
               </Link>
             </div>
@@ -105,15 +105,15 @@ export function Analytics() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-10 h-10 animate-spin text-purple-500" />
+            <Loader2 className="w-10 h-10 animate-spin text-primary" />
           </div>
         ) : !analytics ? (
           <div className="text-center py-20">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MousePointerClick className="w-8 h-8 text-gray-400" />
+            <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
+              <MousePointerClick className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900">暂无数据</h3>
-            <p className="text-gray-500 mt-1">该链接还没有访问记录</p>
+            <h3 className="text-lg font-medium text-foreground">鏆傛棤鏁版嵁</h3>
+            <p className="text-muted-foreground mt-1">璇ラ摼鎺ヨ繕娌℃湁璁块棶璁板綍</p>
           </div>
         ) : (
           <>
@@ -125,27 +125,26 @@ export function Analytics() {
                     <div className="flex items-center gap-3 mb-2">
                       <h2 className="text-xl font-bold">/s/{shortCode}</h2>
                       <Badge variant="secondary" className="font-mono">
-                        {formatNumber(analytics.totalClicks)} 点击
+                        {formatNumber(analytics.totalClicks)} 鐐瑰嚮
                       </Badge>
                     </div>
                     <a 
                       href={selectedLink?.url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline text-sm"
+                      className="text-primary hover:underline text-sm"
                     >
                       {selectedLink?.url}
                     </a>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      创建: {selectedLink ? new Date(selectedLink.createdAt).toLocaleDateString('zh-CN') : '-'}
+                      鍒涘缓: {selectedLink ? new Date(selectedLink.createdAt).toLocaleDateString('zh-CN') : '-'}
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
-                      统计周期: {days}天
-                    </div>
+                      缁熻鍛ㄦ湡: {days}澶?                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -156,11 +155,11 @@ export function Analytics() {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <MousePointerClick className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+                      <MousePointerClick className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">总点击量</p>
+                      <p className="text-sm text-muted-foreground">鎬荤偣鍑婚噺</p>
                       <p className="text-2xl font-bold">{formatNumber(analytics.totalClicks)}</p>
                     </div>
                   </div>
@@ -170,11 +169,11 @@ export function Analytics() {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                      <TrendingUp className="w-5 h-5 text-green-600" />
+                    <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+                      <TrendingUp className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">日均点击</p>
+                      <p className="text-sm text-muted-foreground">鏃ュ潎鐐瑰嚮</p>
                       <p className="text-2xl font-bold">
                         {formatNumber(Math.round(analytics.totalClicks / parseInt(days)))}
                       </p>
@@ -186,11 +185,11 @@ export function Analytics() {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <Globe className="w-5 h-5 text-purple-600" />
+                    <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+                      <Globe className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">国家/地区</p>
+                      <p className="text-sm text-muted-foreground">鍥藉/鍦板尯</p>
                       <p className="text-2xl font-bold">{analytics.countries.length}</p>
                     </div>
                   </div>
@@ -200,11 +199,11 @@ export function Analytics() {
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                      <Monitor className="w-5 h-5 text-orange-600" />
+                    <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+                      <Monitor className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">设备类型</p>
+                      <p className="text-sm text-muted-foreground">璁惧绫诲瀷</p>
                       <p className="text-2xl font-bold">{analytics.devices.length}</p>
                     </div>
                   </div>
@@ -215,10 +214,10 @@ export function Analytics() {
             {/* Charts */}
             <Tabs defaultValue="daily" className="space-y-6">
               <TabsList>
-                <TabsTrigger value="daily">每日趋势</TabsTrigger>
-                <TabsTrigger value="hourly">时段分布</TabsTrigger>
-                <TabsTrigger value="devices">设备分析</TabsTrigger>
-                <TabsTrigger value="geo">地理位置</TabsTrigger>
+                <TabsTrigger value="daily">姣忔棩瓒嬪娍</TabsTrigger>
+                <TabsTrigger value="hourly">鏃舵鍒嗗竷</TabsTrigger>
+                <TabsTrigger value="devices">璁惧鍒嗘瀽</TabsTrigger>
+                <TabsTrigger value="geo">鍦扮悊浣嶇疆</TabsTrigger>
               </TabsList>
 
               <TabsContent value="daily">
@@ -226,19 +225,13 @@ export function Analytics() {
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
                       <Calendar className="w-5 h-5" />
-                      每日点击趋势
+                      姣忔棩鐐瑰嚮瓒嬪娍
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="h-80">
                       <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={analytics.daily}>
-                          <defs>
-                            <linearGradient id="colorClicks" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-                              <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-                            </linearGradient>
-                          </defs>
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis 
                             dataKey="date" 
@@ -247,15 +240,15 @@ export function Analytics() {
                           />
                           <YAxis tick={{ fontSize: 12 }} />
                           <Tooltip 
-                            formatter={(value: number) => [value, '点击量']}
+                            formatter={(value: number) => [value, '鐐瑰嚮閲?]}
                             labelFormatter={(label) => formatDate(label as string)}
                           />
                           <Area 
                             type="monotone" 
                             dataKey="value" 
-                            stroke="#8884d8" 
-                            fillOpacity={1} 
-                            fill="url(#colorClicks)" 
+                            stroke="#0f766e" 
+                            fillOpacity={0.2} 
+                            fill="#0f766e" 
                           />
                         </AreaChart>
                       </ResponsiveContainer>
@@ -269,7 +262,7 @@ export function Analytics() {
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
                       <Clock className="w-5 h-5" />
-                      24小时分布
+                      24灏忔椂鍒嗗竷
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -284,10 +277,10 @@ export function Analytics() {
                           />
                           <YAxis tick={{ fontSize: 12 }} />
                           <Tooltip 
-                            formatter={(value: number) => [value, '点击量']}
+                            formatter={(value: number) => [value, '鐐瑰嚮閲?]}
                             labelFormatter={(label) => `${label}:00 - ${label}:59`}
                           />
-                          <Bar dataKey="value" fill="#82ca9d" />
+                          <Bar dataKey="value" fill="#0f766e" />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
@@ -301,7 +294,7 @@ export function Analytics() {
                     <CardHeader>
                       <CardTitle className="text-lg flex items-center gap-2">
                         <Smartphone className="w-5 h-5" />
-                        设备类型
+                        璁惧绫诲瀷
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -321,7 +314,7 @@ export function Analytics() {
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                               ))}
                             </Pie>
-                            <Tooltip formatter={(value: number) => [value, '点击量']} />
+                            <Tooltip formatter={(value: number) => [value, '鐐瑰嚮閲?]} />
                           </PieChart>
                         </ResponsiveContainer>
                       </div>
@@ -343,8 +336,7 @@ export function Analytics() {
                     <CardHeader>
                       <CardTitle className="text-lg flex items-center gap-2">
                         <Chrome className="w-5 h-5" />
-                        浏览器分布
-                      </CardTitle>
+                        娴忚鍣ㄥ垎甯?                      </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="h-64">
@@ -363,7 +355,7 @@ export function Analytics() {
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                               ))}
                             </Pie>
-                            <Tooltip formatter={(value: number) => [value, '点击量']} />
+                            <Tooltip formatter={(value: number) => [value, '鐐瑰嚮閲?]} />
                           </PieChart>
                         </ResponsiveContainer>
                       </div>
@@ -388,7 +380,7 @@ export function Analytics() {
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
                       <MapPin className="w-5 h-5" />
-                      国家/地区分布
+                      鍥藉/鍦板尯鍒嗗竷
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -407,8 +399,8 @@ export function Analytics() {
                             tick={{ fontSize: 12 }}
                             width={60}
                           />
-                          <Tooltip formatter={(value: number) => [value, '点击量']} />
-                          <Bar dataKey="value" fill="#8884d8" />
+                          <Tooltip formatter={(value: number) => [value, '鐐瑰嚮閲?]} />
+                          <Bar dataKey="value" fill="#1d4ed8" />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
@@ -422,3 +414,4 @@ export function Analytics() {
     </div>
   );
 }
+
