@@ -83,7 +83,7 @@ export function Settings({ username }: SettingsProps) {
             <Link to="/">
               <Button variant="ghost">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                杩斿洖棣栭〉
+                返回首页
               </Button>
             </Link>
           </div>
@@ -98,18 +98,18 @@ export function Settings({ username }: SettingsProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="w-5 h-5" />
-                璐︽埛淇℃伅
+                账户信息
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <Label className="text-muted-foreground">鐢ㄦ埛鍚?/Label>
+                  <Label className="text-muted-foreground">用户名</Label>
                   <p className="text-lg font-medium">{username}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">瑙掕壊</Label>
-                  <p className="text-lg font-medium">绠＄悊鍛?/p>
+                  <Label className="text-muted-foreground">角色</Label>
+                  <p className="text-lg font-medium">管理员</p>
                 </div>
               </div>
             </CardContent>
@@ -120,7 +120,7 @@ export function Settings({ username }: SettingsProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Key className="w-5 h-5" />
-                淇敼瀵嗙爜
+                修改密码
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -128,13 +128,13 @@ export function Settings({ username }: SettingsProps) {
                 <Alert className="mb-4 bg-accent border-border">
                   <Check className="w-4 h-4 text-primary" />
                   <AlertDescription className="text-primary">
-                    瀵嗙爜淇敼鎴愬姛锛佽浣跨敤鏂板瘑鐮佺櫥褰曘€?                  </AlertDescription>
+                    密码修改成功！请使用新密码登录。</AlertDescription>
                 </Alert>
               )}
 
               <form onSubmit={handleChangePassword} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="oldPassword">褰撳墠瀵嗙爜</Label>
+                  <Label htmlFor="oldPassword">当前密码</Label>
                   <Input
                     id="oldPassword"
                     type="password"
@@ -146,11 +146,11 @@ export function Settings({ username }: SettingsProps) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="newPassword">鏂板瘑鐮?/Label>
+                  <Label htmlFor="newPassword">新密码</Label>
                   <Input
                     id="newPassword"
                     type="password"
-                    placeholder="璇疯緭鍏ユ柊瀵嗙爜锛堣嚦灏?浣嶏級"
+                    placeholder="请输入新密码（至少 6 位）"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     disabled={isSubmitting}
@@ -158,11 +158,11 @@ export function Settings({ username }: SettingsProps) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">纭鏂板瘑鐮?/Label>
+                  <Label htmlFor="confirmPassword">确认新密码</Label>
                   <Input
                     id="confirmPassword"
                     type="password"
-                    placeholder="璇峰啀娆¤緭鍏ユ柊瀵嗙爜"
+                    placeholder="请再次输入新密码"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     disabled={isSubmitting}
@@ -172,9 +172,9 @@ export function Settings({ username }: SettingsProps) {
                 <div className="flex items-start gap-2 p-4 bg-accent rounded-lg">
                   <AlertTriangle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                   <div className="text-sm text-muted-foreground">
-                    <p className="font-medium">瀹夊叏鎻愮ず</p>
+                    <p className="font-medium">安全提示</p>
                     <p className="mt-1">
-                      璇蜂娇鐢ㄥ己瀵嗙爜锛堝寘鍚ぇ灏忓啓瀛楁瘝銆佹暟瀛楀拰鐗规畩瀛楃锛夛紝骞跺畾鏈熸洿鎹㈠瘑鐮佷互淇濊瘉璐︽埛瀹夊叏銆?                    </p>
+                      请使用强密码（包含大小写字母、数字和特殊字符），并定期更换密码以保证账户安全。</p>
                   </div>
                 </div>
 
@@ -186,10 +186,10 @@ export function Settings({ username }: SettingsProps) {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      淇敼涓?..
+                      修改中...
                     </>
                   ) : (
-                    '淇敼瀵嗙爜'
+                    '修改密码'
                   )}
                 </Button>
               </form>
@@ -199,25 +199,25 @@ export function Settings({ username }: SettingsProps) {
           {/* System Info */}
           <Card>
             <CardHeader>
-              <CardTitle>绯荤粺淇℃伅</CardTitle>
+              <CardTitle>系统信息</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">骞冲彴鐗堟湰</span>
+                  <span className="text-muted-foreground">平台版本</span>
                   <span className="font-medium">v1.0.0</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">鍚庣鏋舵瀯</span>
+                  <span className="text-muted-foreground">后端架构</span>
                   <span className="font-medium">Cloudflare Workers</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">鏁版嵁瀛樺偍</span>
+                  <span className="text-muted-foreground">数据存储</span>
                   <span className="font-medium">Cloudflare KV + D1</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">璇锋眰闄愬埗</span>
-                  <span className="font-medium text-primary">鏃犻檺鍒?/span>
+                  <span className="text-muted-foreground">请求限制</span>
+                  <span className="font-medium text-primary">无限制</span>
                 </div>
               </div>
             </CardContent>

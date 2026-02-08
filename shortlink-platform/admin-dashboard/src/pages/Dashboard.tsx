@@ -41,28 +41,28 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
 
   const statCards = [
     {
-      title: '鎬婚摼鎺ユ暟',
+      title: '总链接数',
       value: stats?.totalLinks || 0,
       icon: Link2,
       color: 'bg-primary',
       trend: '+12%',
     },
     {
-      title: '鎬荤偣鍑婚噺',
+      title: '总点击量',
       value: stats?.totalClicks || 0,
       icon: MousePointerClick,
       color: 'bg-slate-700',
       trend: '+28%',
     },
     {
-      title: '浠婃棩鐐瑰嚮',
+      title: '今日点击',
       value: stats?.todayClicks || 0,
       icon: TrendingUp,
       color: 'bg-emerald-600',
       trend: '+5%',
     },
     {
-      title: '娲昏穬閾炬帴',
+      title: '活跃链接',
       value: stats?.activeLinks || 0,
       icon: Activity,
       color: 'bg-amber-500',
@@ -89,10 +89,10 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
             </div>
             
             <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">娆㈣繋, {username}</span>
+              <span className="text-sm text-muted-foreground">欢迎，{username}</span>
               <Button variant="ghost" size="sm" onClick={onLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
-                閫€鍑?              </Button>
+                退出</Button>
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
                       {isLoading ? '-' : card.value.toLocaleString()}
                     </p>
                     <span className="text-xs text-primary font-medium mt-1 inline-block">
-                      {card.trend} 杈冧笂鏈?                    </span>
+                      {card.trend} 较上月</span>
                   </div>
                   <div className={`w-12 h-12 rounded-xl ${card.color} flex items-center justify-center`}>
                     <card.icon className="w-6 h-6 text-white" />
@@ -128,7 +128,7 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
           {/* Main Actions */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-lg">蹇嵎鎿嶄綔</CardTitle>
+              <CardTitle className="text-lg">快捷操作</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -140,7 +140,7 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
                     <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
                       <Plus className="w-5 h-5 text-primary" />
                     </div>
-                    <span className="font-medium">鍒涘缓鐭摼鎺?/span>
+                    <span className="font-medium">创建短链接</span>
                   </Button>
                 </Link>
                 
@@ -152,7 +152,7 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
                     <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
                       <ExternalLink className="w-5 h-5 text-primary" />
                     </div>
-                    <span className="font-medium">绠＄悊閾炬帴</span>
+                    <span className="font-medium">管理链接</span>
                   </Button>
                 </Link>
                 
@@ -164,7 +164,7 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
                     <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
                       <BarChart3 className="w-5 h-5 text-primary" />
                     </div>
-                    <span className="font-medium">鏁版嵁鍒嗘瀽</span>
+                    <span className="font-medium">数据分析</span>
                   </Button>
                 </Link>
                 
@@ -176,7 +176,7 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
                     <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
                       <Settings className="w-5 h-5 text-primary" />
                     </div>
-                    <span className="font-medium">绯荤粺璁剧疆</span>
+                    <span className="font-medium">系统设置</span>
                   </Button>
                 </Link>
               </div>
@@ -186,36 +186,36 @@ export function Dashboard({ username, onLogout }: DashboardProps) {
           {/* Recent Activity */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">绯荤粺鐘舵€?/CardTitle>
+              <CardTitle className="text-lg">系统状态</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">绯荤粺鐘舵€?/span>
+                  <span className="text-sm text-muted-foreground">系统状态</span>
                   <span className="px-2 py-1 bg-accent text-primary text-xs rounded-full font-medium">
                     姝ｅ父杩愯
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">API 鐘舵€?/span>
+                  <span className="text-sm text-muted-foreground">API 状态</span>
                   <span className="px-2 py-1 bg-accent text-primary text-xs rounded-full font-medium">
                     鍦ㄧ嚎
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">鏁版嵁搴?/span>
+                  <span className="text-sm text-muted-foreground">数据库</span>
                   <span className="px-2 py-1 bg-accent text-primary text-xs rounded-full font-medium">
-                    宸茶繛鎺?                  </span>
+                    已连接</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">缂撳瓨鏈嶅姟</span>
+                  <span className="text-sm text-muted-foreground">缓存服务</span>
                   <span className="px-2 py-1 bg-accent text-primary text-xs rounded-full font-medium">
                     姝ｅ父
                   </span>
                 </div>
                 <div className="pt-4 border-t">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">鏈€鍚庢洿鏂?/span>
+                    <span className="text-muted-foreground">最后更新</span>
                     <span className="text-foreground">{currentTime.toLocaleTimeString('zh-CN')}</span>
                   </div>
                 </div>

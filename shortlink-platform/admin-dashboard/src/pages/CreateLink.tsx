@@ -128,14 +128,14 @@ export function CreateLink() {
               </div>
               
               <h2 className="text-2xl font-bold text-foreground mb-2">
-                鐭摼鎺ュ垱寤烘垚鍔燂紒
+                短链接创建成功！
               </h2>
               <p className="text-muted-foreground mb-8">
-                鎮ㄧ殑鐭摼鎺ュ凡鍑嗗灏辩华锛屽彲浠ュ紑濮嬩娇鐢ㄤ簡
+                您的短链接已准备就绪，可以开始使用了
               </p>
 
               <div className="bg-accent rounded-xl p-6 mb-8">
-                <p className="text-sm text-muted-foreground mb-2">鎮ㄧ殑鐭摼鎺?/p>
+                <p className="text-sm text-muted-foreground mb-2">您的短链接</p>
                 <div className="flex items-center justify-center gap-3">
                   <code className="text-lg font-mono bg-card px-4 py-2 rounded-lg border">
                     {createdLink}
@@ -149,10 +149,10 @@ export function CreateLink() {
               <div className="flex items-center justify-center gap-4">
                 <Button variant="outline" onClick={handleReset}>
                   <Sparkles className="w-4 h-4 mr-2" />
-                  鍒涘缓鍙︿竴涓?                </Button>
+                  创建另一个</Button>
                 <Link to="/links">
                   <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                    鏌ョ湅鎵€鏈夐摼鎺?                  </Button>
+                    查看所有链接</Button>
                 </Link>
               </div>
             </CardContent>
@@ -182,7 +182,7 @@ export function CreateLink() {
             <Link to="/links">
               <Button variant="ghost">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                杩斿洖鍒楄〃
+                返回列表
               </Button>
             </Link>
           </div>
@@ -193,7 +193,7 @@ export function CreateLink() {
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card>
           <CardHeader>
-            <CardTitle>鍒涘缓鐭摼鎺?/CardTitle>
+            <CardTitle>创建短链接</CardTitle>
           </CardHeader>
           
           <CardContent>
@@ -201,7 +201,7 @@ export function CreateLink() {
               {/* URL Input */}
               <div className="space-y-2">
                 <Label htmlFor="url">
-                  鐩爣 URL <span className="text-destructive">*</span>
+                  目标 URL <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="url"
@@ -213,13 +213,13 @@ export function CreateLink() {
                   className="h-11"
                 />
                 <p className="text-sm text-muted-foreground">
-                  杈撳叆鎮ㄦ兂瑕佺缉鐭殑瀹屾暣URL鍦板潃
+                  输入您想要缩短的完整 URL 地址
                 </p>
               </div>
 
               {/* Custom Suffix */}
               <div className="space-y-2">
-                <Label htmlFor="suffix">鑷畾涔夊悗缂€锛堝彲閫夛級</Label>
+                <Label htmlFor="suffix">自定义后缀（可选）</Label>
                 <div className="flex items-center gap-2">
                   <span className="text-muted-foreground font-mono">/s/</span>
                   <Input
@@ -232,15 +232,15 @@ export function CreateLink() {
                   />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  鐣欑┖灏嗚嚜鍔ㄧ敓鎴愰殢鏈哄悗缂€銆傚彧鑳戒娇鐢ㄥ瓧姣嶃€佹暟瀛椼€佷笅鍒掔嚎鍜岃繛瀛楃锛岄暱搴?-32浣嶃€?                </p>
+                  留空将自动生成随机后缀。只能使用字母、数字、下划线和连字符，长度 1-32 位。</p>
               </div>
 
               {/* Title */}
               <div className="space-y-2">
-                <Label htmlFor="title">鏍囬锛堝彲閫夛級</Label>
+                <Label htmlFor="title">标题（可选）</Label>
                 <Input
                   id="title"
-                  placeholder="閾炬帴鏍囬"
+                  placeholder="链接标题"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   disabled={isSubmitting}
@@ -250,7 +250,7 @@ export function CreateLink() {
 
               {/* Description */}
               <div className="space-y-2">
-                <Label htmlFor="description">鎻忚堪锛堝彲閫夛級</Label>
+                <Label htmlFor="description">描述（可选）</Label>
                 <Input
                   id="description"
                   placeholder="链接描述，将显示在中间页面"
@@ -271,7 +271,7 @@ export function CreateLink() {
                       <EyeOff className="w-5 h-5 text-muted-foreground" />
                     )}
                     <Label htmlFor="interstitial" className="cursor-pointer">
-                      鏄剧ず涓棿椤甸潰
+                      显示中间页面
                     </Label>
                   </div>
                   <Switch
@@ -287,8 +287,8 @@ export function CreateLink() {
                     <div className="flex items-center justify-between">
                       <Label className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-muted-foreground" />
-                        鍊掕鏃舵椂闂?                      </Label>
-                      <Badge variant="secondary">{delay} 绉?/Badge>
+                        倒计时时间</Label>
+                      <Badge variant="secondary">{delay} 秒</Badge>
                     </div>
                     <Slider
                       value={[delay]}
@@ -299,14 +299,14 @@ export function CreateLink() {
                       disabled={isSubmitting}
                     />
                     <p className="text-sm text-muted-foreground">
-                      鐢ㄦ埛闇€瑕佸湪涓棿椤甸潰绛夊緟鍊掕鏃剁粨鏉熷悗鎵嶈兘璺宠浆
+                      用户需要在中间页面等待倒计时结束后才能跳转
                     </p>
                   </div>
                 )}
 
                 {!showInterstitial && (
                   <p className="text-sm text-primary">
-                    鐢ㄦ埛璁块棶鐭摼鎺ュ悗灏嗙洿鎺ヨ烦杞埌鐩爣椤甸潰
+                    用户访问短链接后将直接跳转到目标页面
                   </p>
                 )}
               </div>
@@ -315,7 +315,7 @@ export function CreateLink() {
               <div className="flex items-center gap-4 pt-4">
                 <Link to="/links" className="flex-1">
                   <Button variant="outline" className="w-full" disabled={isSubmitting}>
-                    鍙栨秷
+                    取消
                   </Button>
                 </Link>
                 <Button 
@@ -326,10 +326,10 @@ export function CreateLink() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      鍒涘缓涓?..
+                      创建中...
                     </>
                   ) : (
-                    '鍒涘缓鐭摼鎺?
+                    '创建短链接'
                   )}
                 </Button>
               </div>

@@ -122,7 +122,7 @@ export function EditLink() {
             <Link to="/links">
               <Button variant="ghost">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                杩斿洖鍒楄〃
+                返回列表
               </Button>
             </Link>
           </div>
@@ -134,7 +134,7 @@ export function EditLink() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>缂栬緫鐭摼鎺?/CardTitle>
+              <CardTitle>编辑短链接</CardTitle>
               <Badge variant="outline" className="font-mono text-lg">
                 /s/{shortCode}
               </Badge>
@@ -146,7 +146,7 @@ export function EditLink() {
               {/* URL Input */}
               <div className="space-y-2">
                 <Label htmlFor="url">
-                  鐩爣 URL <span className="text-destructive">*</span>
+                  目标 URL <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="url"
@@ -161,10 +161,10 @@ export function EditLink() {
 
               {/* Title */}
               <div className="space-y-2">
-                <Label htmlFor="title">鏍囬锛堝彲閫夛級</Label>
+                <Label htmlFor="title">标题（可选）</Label>
                 <Input
                   id="title"
-                  placeholder="閾炬帴鏍囬"
+                  placeholder="链接标题"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   disabled={isSubmitting}
@@ -174,7 +174,7 @@ export function EditLink() {
 
               {/* Description */}
               <div className="space-y-2">
-                <Label htmlFor="description">鎻忚堪锛堝彲閫夛級</Label>
+                <Label htmlFor="description">描述（可选）</Label>
                 <Input
                   id="description"
                   placeholder="链接描述，将显示在中间页面"
@@ -194,11 +194,11 @@ export function EditLink() {
                     <X className="w-5 h-5 text-destructive" />
                   )}
                   <Label htmlFor="active" className="cursor-pointer">
-                    閾炬帴鐘舵€?                  </Label>
+                    链接状态</Label>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className={`text-sm ${active ? 'text-primary' : 'text-destructive'}`}>
-                    {active ? '宸插惎鐢? : '宸茬鐢?}
+                    {active ? '已启用' : '已禁用'}
                   </span>
                   <Switch
                     id="active"
@@ -219,7 +219,7 @@ export function EditLink() {
                       <EyeOff className="w-5 h-5 text-muted-foreground" />
                     )}
                     <Label htmlFor="interstitial" className="cursor-pointer">
-                      鏄剧ず涓棿椤甸潰
+                      显示中间页面
                     </Label>
                   </div>
                   <Switch
@@ -235,8 +235,8 @@ export function EditLink() {
                     <div className="flex items-center justify-between">
                       <Label className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-muted-foreground" />
-                        鍊掕鏃舵椂闂?                      </Label>
-                      <Badge variant="secondary">{delay} 绉?/Badge>
+                        倒计时时间</Label>
+                      <Badge variant="secondary">{delay} 秒</Badge>
                     </div>
                     <Slider
                       value={[delay]}
@@ -254,7 +254,7 @@ export function EditLink() {
               <div className="flex items-center gap-4 pt-4">
                 <Link to="/links" className="flex-1">
                   <Button variant="outline" className="w-full" disabled={isSubmitting}>
-                    鍙栨秷
+                    取消
                   </Button>
                 </Link>
                 <Button 
@@ -265,10 +265,10 @@ export function EditLink() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      淇濆瓨涓?..
+                      保存中...
                     </>
                   ) : (
-                    '淇濆瓨淇敼'
+                    '保存修改'
                   )}
                 </Button>
               </div>
