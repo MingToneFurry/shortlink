@@ -58,16 +58,16 @@ wrangler login
 
 ```bash
 # 创建链接数据 KV
-wrangler kv:namespace create "LINKS_KV"
-wrangler kv:namespace create "LINKS_KV" --preview
+wrangler kv namespace create "LINKS_KV"
+wrangler kv namespace create "LINKS_KV" --preview
 
 # 创建分析数据 KV
-wrangler kv:namespace create "ANALYTICS_KV"
-wrangler kv:namespace create "ANALYTICS_KV" --preview
+wrangler kv namespace create "ANALYTICS_KV"
+wrangler kv namespace create "ANALYTICS_KV" --preview
 
 # 创建管理员数据 KV
-wrangler kv:namespace create "ADMIN_KV"
-wrangler kv:namespace create "ADMIN_KV" --preview
+wrangler kv namespace create "ADMIN_KV"
+wrangler kv namespace create "ADMIN_KV" --preview
 ```
 
 记录每个命令输出的 namespace ID，稍后需要更新到 `wrangler.toml`。

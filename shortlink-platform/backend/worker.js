@@ -760,14 +760,30 @@ async function getDashboardStats(env) {
  */
 async function initAdmin(env) {
   const adminExists = await env.ADMIN_KV.get('admin:initialized');
+  const adminKey = 'admin:user:admin';
+  const legacyKey = 'admin:user:default';
+  const legacyData = await env.ADMIN_KV.get(legacyKey);
+
   if (!adminExists) {
+    if (legacyData) {
+      await env.ADMIN_KV.put(adminKey, legacyData);
+      await env.ADMIN_KV.put('admin:initialized', 'true');
+      return;
+    }
+
     const defaultPassword = await hashPassword('admin123');
-    await env.ADMIN_KV.put('admin:user:default', JSON.stringify({
+    await env.ADMIN_KV.put(adminKey, JSON.stringify({
       username: 'admin',
       password: defaultPassword,
       createdAt: Date.now()
     }));
     await env.ADMIN_KV.put('admin:initialized', 'true');
+    return;
+  }
+
+  const adminData = await env.ADMIN_KV.get(adminKey);
+  if (!adminData && legacyData) {
+    await env.ADMIN_KV.put(adminKey, legacyData);
   }
 }
 

@@ -3,6 +3,7 @@
 name = "shortlink-platform"
 main = "worker.js"
 compatibility_date = "2024-01-01"
+account_id = "a2aa832490a332300a12ac0c12ad49e6"
 
 # Environment Variables (secrets should be set via wrangler secret)
 [vars]
@@ -12,18 +13,18 @@ ADMIN_DASHBOARD_URL = "https://your-admin-dashboard-url.pages.dev"
 # KV Namespaces
 [[kv_namespaces]]
 binding = "LINKS_KV"
-id = "your_links_kv_namespace_id"
-preview_id = "your_preview_links_kv_namespace_id"
+id = "1f00d3850e274c0ea5992ea7b02f8ec1"
+preview_id = "760f12818b2442c99c131ff1508f52c8"
 
 [[kv_namespaces]]
 binding = "ANALYTICS_KV"
-id = "your_analytics_kv_namespace_id"
-preview_id = "your_preview_analytics_kv_namespace_id"
+id = "9d2e6ebe8e1944868f7d452b0c1282c2"
+preview_id = "5f64f285bca3454482d757dfc00bffdd"
 
 [[kv_namespaces]]
 binding = "ADMIN_KV"
-id = "your_admin_kv_namespace_id"
-preview_id = "your_preview_admin_kv_namespace_id"
+id = "917e3730630c4e8f973d304ba5df99fa"
+preview_id = "08181fb20bdd407680c17bcee6fbffaf"
 
 # Secrets (set these with wrangler secret put):
 # JWT_SECRET - Random string for JWT signing

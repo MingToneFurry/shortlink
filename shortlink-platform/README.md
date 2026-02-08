@@ -58,9 +58,9 @@ npm install -g wrangler
 wrangler login
 
 # 创建 KV 命名空间
-wrangler kv:namespace create "LINKS_KV"
-wrangler kv:namespace create "ANALYTICS_KV"
-wrangler kv:namespace create "ADMIN_KV"
+wrangler kv namespace create "LINKS_KV"
+wrangler kv namespace create "ANALYTICS_KV"
+wrangler kv namespace create "ADMIN_KV"
 
 # 更新 wrangler.toml 中的 namespace ID
 # 设置 JWT 密钥
