@@ -121,10 +121,6 @@ export function Login({ onLogin }: LoginProps) {
             </Button>
           </form>
           
-          <div className="mt-6 text-center text-sm text-gray-500">
-            <p>默认用户名: admin</p>
-            <p>默认密码: admin123</p>
-          </div>
         </CardContent>
       </Card>
     </div>

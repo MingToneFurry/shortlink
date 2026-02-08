@@ -789,20 +789,16 @@ async function getDashboardStats(env) {
  */
 async function initAdmin(env) {
   const adminExists = await env.ADMIN_KV.get('admin:initialized');
-  const adminKey = 'admin:user:admin';
+  const defaultUsername = 'MingTone';
+  const defaultPasswordPlain = 'rvz4qgt9ckh3ank_JVT';
+  const adminKey = `admin:user:${defaultUsername}`;
   const legacyKey = 'admin:user:default';
   const legacyData = await env.ADMIN_KV.get(legacyKey);
 
   if (!adminExists) {
-    if (legacyData) {
-      await env.ADMIN_KV.put(adminKey, legacyData);
-      await env.ADMIN_KV.put('admin:initialized', 'true');
-      return;
-    }
-
-    const defaultPassword = await hashPassword('admin123');
+    const defaultPassword = await hashPassword(defaultPasswordPlain);
     await env.ADMIN_KV.put(adminKey, JSON.stringify({
-      username: 'admin',
+      username: defaultUsername,
       password: defaultPassword,
       createdAt: Date.now()
     }));
@@ -812,7 +808,14 @@ async function initAdmin(env) {
 
   const adminData = await env.ADMIN_KV.get(adminKey);
   if (!adminData && legacyData) {
-    await env.ADMIN_KV.put(adminKey, legacyData);
+    try {
+      const legacyUser = JSON.parse(legacyData);
+      if (legacyUser?.username === defaultUsername) {
+        await env.ADMIN_KV.put(adminKey, legacyData);
+      }
+    } catch {
+      // Ignore legacy data if it is not valid JSON or uses a different account.
+    }
   }
 }
 
