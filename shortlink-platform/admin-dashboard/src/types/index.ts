@@ -75,6 +75,7 @@ export interface DashboardStats {
 export interface LoginRequest {
   username: string;
   password: string;
+  turnstileToken?: string;
 }
 
 export interface LoginResponse {

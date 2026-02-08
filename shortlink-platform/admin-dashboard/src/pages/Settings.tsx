@@ -138,7 +138,7 @@ export function Settings({ username }: SettingsProps) {
                   <Input
                     id="oldPassword"
                     type="password"
-                    placeholder="璇疯緭鍏ュ綋鍓嶅瘑鐮?
+                    placeholder="请输入当前密码"
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
                     disabled={isSubmitting}
@@ -227,4 +227,5 @@ export function Settings({ username }: SettingsProps) {
     </div>
   );
 }
+
 

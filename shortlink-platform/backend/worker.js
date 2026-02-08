@@ -62,8 +62,8 @@ function getInterstitialTemplate(url, delay, title, description) {
     }
     
     body {
-      font-family: Consolas, Monaco, "SF Mono", "JetBrains Mono", ui-monospace, "PingFang SC", "Microsoft YaHei", monospace;
-      background: var(--bg) url('https://api.furry.ist/furry-img/') center/cover fixed no-repeat;
+      font-family: "SF Pro Text", "SF Pro Display", "SF Mono", "JetBrains Mono", "IBM Plex Mono", Menlo, Monaco, Consolas, ui-monospace, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg) url('https://api.furry.ist/furry-img') center/cover fixed no-repeat;
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -91,7 +91,8 @@ function getInterstitialTemplate(url, delay, title, description) {
       border-radius: 10px;
       max-width: 640px;
       width: 100%;
-      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
+      animation: panel-in 360ms ease-out;
     }
     
     .h {
@@ -262,6 +263,10 @@ function getInterstitialTemplate(url, delay, title, description) {
     }
     
     @keyframes b { 50% { opacity: 0; } }
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     
     @media (max-width: 480px) {
       body {
@@ -348,9 +353,10 @@ function getInterstitialTemplate(url, delay, title, description) {
     const countdownEl = document.getElementById('countdown');
 
     function updateCountdown() {
-      countdown--;
+      countdown = Math.max(0, countdown - 1);
       countdownEl.textContent = countdown;
       if (countdown <= 0) {
+        clearInterval(timer);
         window.location.href = '${url}';
       }
     }
@@ -400,7 +406,7 @@ function getErrorTemplate(message, code = 404) {
     }
     
     body {
-      font-family: Consolas, Monaco, "SF Mono", "JetBrains Mono", ui-monospace, "PingFang SC", "Microsoft YaHei", monospace;
+      font-family: "SF Pro Text", "SF Pro Display", "SF Mono", "JetBrains Mono", "IBM Plex Mono", Menlo, Monaco, Consolas, ui-monospace, "PingFang SC", "Microsoft YaHei", sans-serif;
       background: var(--bg);
       min-height: 100vh;
       display: flex;
@@ -416,7 +422,8 @@ function getErrorTemplate(message, code = 404) {
       border-radius: 10px;
       max-width: 520px;
       width: 100%;
-      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
+      animation: panel-in 360ms ease-out;
     }
 
     .h {
@@ -571,6 +578,10 @@ function getErrorTemplate(message, code = 404) {
     }
 
     @keyframes b { 50% { opacity: 0; } }
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     @media (max-width: 480px) {
       body { padding: 0; }
@@ -810,6 +821,25 @@ async function hashPassword(password) {
   const data = encoder.encode(password);
   const hash = await crypto.subtle.digest('SHA-256', data);
   return btoa(String.fromCharCode(...new Uint8Array(hash)));
+}
+
+/**
+ * Verify Cloudflare Turnstile token (optional)
+ */
+async function verifyTurnstileToken(token, secret, ip) {
+  if (!token || !secret) return false;
+  const form = new URLSearchParams();
+  form.append('secret', secret);
+  form.append('response', token);
+  if (ip && ip !== 'unknown') {
+    form.append('remoteip', ip);
+  }
+  const resp = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    body: form,
+  });
+  const data = await resp.json();
+  return data && data.success === true;
 }
 
 /**
@@ -1144,10 +1174,18 @@ async function verifyAdminToken(env, request) {
  * Handle admin login
  */
 async function handleLogin(env, request) {
-  const { username, password } = await request.json();
+  const { username, password, turnstileToken } = await request.json();
   
   if (!username || !password) {
     return jsonResponse({ error: '鐢ㄦ埛鍚嶅拰瀵嗙爜涓嶈兘涓虹┖' }, 400);
+  }
+
+  if (env.TURNSTILE_SECRET) {
+    const ip = getClientIP(request);
+    const verified = await verifyTurnstileToken(turnstileToken, env.TURNSTILE_SECRET, ip);
+    if (!verified) {
+      return jsonResponse({ error: '浜烘満楠岃瘉澶辫触' }, 403);
+    }
   }
   
   const isValid = await authenticateAdmin(env, username, password);

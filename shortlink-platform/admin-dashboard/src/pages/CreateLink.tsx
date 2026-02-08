@@ -253,7 +253,7 @@ export function CreateLink() {
                 <Label htmlFor="description">鎻忚堪锛堝彲閫夛級</Label>
                 <Input
                   id="description"
-                  placeholder="閾炬帴鎻忚堪锛屽皢鏄剧ず鍦ㄤ腑闂撮〉闈?
+                  placeholder="链接描述，将显示在中间页面"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   disabled={isSubmitting}
@@ -340,4 +340,5 @@ export function CreateLink() {
     </div>
   );
 }
+
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,7 +7,16 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Link2, Eye, EyeOff, Loader2 } from 'lucide-react';
 
 interface LoginProps {
-  onLogin: (credentials: { username: string; password: string }) => Promise<{ success: boolean; error?: string }>;
+  onLogin: (credentials: { username: string; password: string; turnstileToken?: string }) => Promise<{ success: boolean; error?: string }>;
+}
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (container: HTMLElement, options: Record<string, unknown>) => string;
+      remove?: (widgetId: string) => void;
+    };
+  }
 }
 
 export function Login({ onLogin }: LoginProps) {
@@ -16,6 +25,40 @@ export function Login({ onLogin }: LoginProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const turnstileRef = useRef<HTMLDivElement | null>(null);
+  const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
+
+  useEffect(() => {
+    let widgetId: string | null = null;
+    let interval: number | null = null;
+
+    const renderWidget = () => {
+      if (!turnstileRef.current || !window.turnstile) return;
+      if (widgetId) return;
+      const isCompact = window.innerWidth < 420;
+      widgetId = window.turnstile.render(turnstileRef.current, {
+        sitekey: siteKey || 'YOUR_TURNSTILE_SITE_KEY',
+        callback: (token: string) => setTurnstileToken(token),
+        'expired-callback': () => setTurnstileToken(''),
+        'error-callback': () => setTurnstileToken(''),
+        theme: 'light',
+        size: isCompact ? 'compact' : 'normal',
+      });
+    };
+
+    renderWidget();
+    if (!window.turnstile) {
+      interval = window.setInterval(renderWidget, 200);
+    }
+
+    return () => {
+      if (interval) window.clearInterval(interval);
+      if (widgetId && window.turnstile?.remove) {
+        window.turnstile.remove(widgetId);
+      }
+    };
+  }, [siteKey]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,15 +66,21 @@ export function Login({ onLogin }: LoginProps) {
     setIsLoading(true);
 
     if (!username.trim() || !password.trim()) {
-      setError('请输入用户名和密码');
+      setError('璇疯緭鍏ョ敤鎴峰悕鍜屽瘑鐮?);
       setIsLoading(false);
       return;
     }
 
-    const result = await onLogin({ username, password });
+    if (!turnstileToken) {
+      setError('璇峰畬鎴愪汉鏈哄疄鎵嬮獙璇?);
+      setIsLoading(false);
+      return;
+    }
+
+    const result = await onLogin({ username, password, turnstileToken });
     
     if (!result.success) {
-      setError(result.error || '登录失败');
+      setError(result.error || '鐧诲綍澶辫触');
     }
     
     setIsLoading(false);
@@ -63,8 +112,7 @@ export function Login({ onLogin }: LoginProps) {
           <div>
             <CardTitle className="text-2xl font-bold text-foreground">ShortLink Admin</CardTitle>
             <CardDescription className="mt-2 text-muted-foreground">
-              登录管理后台以创建和管理短链接
-            </CardDescription>
+              鐧诲綍绠＄悊鍚庡彴浠ュ垱寤哄拰绠＄悊鐭摼鎺?            </CardDescription>
           </div>
         </CardHeader>
         
@@ -77,11 +125,11 @@ export function Login({ onLogin }: LoginProps) {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="username">用户名</Label>
+              <Label htmlFor="username">鐢ㄦ埛鍚?/Label>
               <Input
                 id="username"
                 type="text"
-                placeholder="请输入用户名"
+                placeholder="璇疯緭鍏ョ敤鎴峰悕"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={isLoading}
@@ -90,7 +138,7 @@ export function Login({ onLogin }: LoginProps) {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">密码</Label>
+              <Label htmlFor="password">瀵嗙爜</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -110,19 +158,31 @@ export function Login({ onLogin }: LoginProps) {
                 </button>
               </div>
             </div>
+
+            <div className="space-y-2">
+              <Label>Turnstile 楠岃瘉</Label>
+              <div className="rounded-lg border border-border bg-background p-3">
+                <div ref={turnstileRef} />
+              </div>
+              {!siteKey && (
+                <p className="text-xs text-muted-foreground">
+                  璇峰湪 `.env` 涓缃?`VITE_TURNSTILE_SITE_KEY` 锛屽惁鍒欐棤娉曢獙璇?
+                </p>
+              )}
+            </div>
             
             <Button
               type="submit"
               className="w-full h-11 bg-primary text-primary-foreground hover:bg-primary/90"
-              disabled={isLoading}
+              disabled={isLoading || !turnstileToken}
             >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  登录中...
+                  鐧诲綍涓?..
                 </>
               ) : (
-                '登录'
+                '鐧诲綍'
               )}
             </Button>
           </form>
@@ -132,3 +192,4 @@ export function Login({ onLogin }: LoginProps) {
     </div>
   );
 }
+
