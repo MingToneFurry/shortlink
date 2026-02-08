@@ -28,8 +28,11 @@ export function Login({ onLogin }: LoginProps) {
   const [turnstileToken, setTurnstileToken] = useState('');
   const turnstileRef = useRef<HTMLDivElement | null>(null);
   const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
+  const turnstileEnabled = Boolean(siteKey);
 
   useEffect(() => {
+    if (!turnstileEnabled) return;
+
     let widgetId: string | null = null;
     let interval: number | null = null;
 
@@ -38,7 +41,7 @@ export function Login({ onLogin }: LoginProps) {
       if (widgetId) return;
       const isCompact = window.innerWidth < 420;
       widgetId = window.turnstile.render(turnstileRef.current, {
-        sitekey: siteKey || 'YOUR_TURNSTILE_SITE_KEY',
+        sitekey: siteKey,
         callback: (token: string) => setTurnstileToken(token),
         'expired-callback': () => setTurnstileToken(''),
         'error-callback': () => setTurnstileToken(''),
@@ -58,7 +61,7 @@ export function Login({ onLogin }: LoginProps) {
         window.turnstile.remove(widgetId);
       }
     };
-  }, [siteKey]);
+  }, [siteKey, turnstileEnabled]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,28 +69,32 @@ export function Login({ onLogin }: LoginProps) {
     setIsLoading(true);
 
     if (!username.trim() || !password.trim()) {
-      setError('璇疯緭鍏ョ敤鎴峰悕鍜屽瘑鐮?);
+      setError('请输入用户名和密码');
       setIsLoading(false);
       return;
     }
 
-    if (!turnstileToken) {
-      setError('璇峰畬鎴愪汉鏈哄疄鎵嬮獙璇?);
+    if (turnstileEnabled && !turnstileToken) {
+      setError('请完成人机验证');
       setIsLoading(false);
       return;
     }
 
-    const result = await onLogin({ username, password, turnstileToken });
-    
+    const result = await onLogin({
+      username,
+      password,
+      turnstileToken: turnstileEnabled ? turnstileToken : undefined,
+    });
+
     if (!result.success) {
-      setError(result.error || '鐧诲綍澶辫触');
+      setError(result.error || '登录失败');
     }
-    
+
     setIsLoading(false);
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center p-4 relative"
       style={{
         backgroundImage: 'url(https://api.furry.ist/furry-img)',
@@ -95,9 +102,8 @@ export function Login({ onLogin }: LoginProps) {
         backgroundPosition: 'center',
       }}
     >
-      {/* Overlay */}
       <div className="absolute inset-0 bg-slate-900/35 backdrop-blur-sm" />
-      
+
       <Card className="w-full max-w-md relative z-10 shadow-xl overflow-hidden gap-0">
         <div className="flex items-center gap-2 px-4 py-3 border-b bg-muted/60">
           <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
@@ -112,10 +118,11 @@ export function Login({ onLogin }: LoginProps) {
           <div>
             <CardTitle className="text-2xl font-bold text-foreground">ShortLink Admin</CardTitle>
             <CardDescription className="mt-2 text-muted-foreground">
-              鐧诲綍绠＄悊鍚庡彴浠ュ垱寤哄拰绠＄悊鐭摼鎺?            </CardDescription>
+              登录管理后台以创建和管理短链接
+            </CardDescription>
           </div>
         </CardHeader>
-        
+
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
@@ -123,22 +130,22 @@ export function Login({ onLogin }: LoginProps) {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
+
             <div className="space-y-2">
-              <Label htmlFor="username">鐢ㄦ埛鍚?/Label>
+              <Label htmlFor="username">用户名</Label>
               <Input
                 id="username"
                 type="text"
-                placeholder="璇疯緭鍏ョ敤鎴峰悕"
+                placeholder="请输入用户名"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={isLoading}
                 className="h-11"
               />
             </div>
-            
+
             <div className="space-y-2">
-              <Label htmlFor="password">瀵嗙爜</Label>
+              <Label htmlFor="password">密码</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -160,36 +167,34 @@ export function Login({ onLogin }: LoginProps) {
             </div>
 
             <div className="space-y-2">
-              <Label>Turnstile 楠岃瘉</Label>
+              <Label>Turnstile 验证</Label>
               <div className="rounded-lg border border-border bg-background p-3">
                 <div ref={turnstileRef} />
               </div>
-              {!siteKey && (
+              {!turnstileEnabled && (
                 <p className="text-xs text-muted-foreground">
-                  璇峰湪 `.env` 涓缃?`VITE_TURNSTILE_SITE_KEY` 锛屽惁鍒欐棤娉曢獙璇?
+                  请在 `.env` 中设置 `VITE_TURNSTILE_SITE_KEY`，否则无法验证
                 </p>
               )}
             </div>
-            
+
             <Button
               type="submit"
               className="w-full h-11 bg-primary text-primary-foreground hover:bg-primary/90"
-              disabled={isLoading || !turnstileToken}
+              disabled={isLoading || (turnstileEnabled && !turnstileToken)}
             >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  鐧诲綍涓?..
+                  登录中...
                 </>
               ) : (
-                '鐧诲綍'
+                '登录'
               )}
             </Button>
           </form>
-          
         </CardContent>
       </Card>
     </div>
   );
 }
-
