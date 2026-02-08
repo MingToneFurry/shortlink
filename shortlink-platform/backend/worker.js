@@ -41,7 +41,7 @@ function getInterstitialTemplate(url, delay, title, description) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>鍗冲皢璺宠浆 - ${title || 'ShortLink'}</title>
+  <title>即将跳转 - ${title || 'ShortLink'}</title>
   <style>
     :root {
       --bg: #e8ebef;
@@ -322,8 +322,8 @@ function getInterstitialTemplate(url, delay, title, description) {
         <div class="e" id="countdown">${delay}</div>
       </div>
       <div class="m">
-        <h1>${title || '鍗冲皢璺宠浆'}</h1>
-        <p>${description || '鎮ㄥ嵬灏嗚闂閮ㄩ摼鎺ワ紝璇锋敞鎰忚处鍙峰拰璐骇瀹夊叏'}</p>
+        <h1>${title || '即将跳转'}</h1>
+        <p>${description || '您即将访问外部链接，请注意账号和资产安全'}</p>
       </div>
       <div class="data">
         <div class="r">
@@ -340,8 +340,8 @@ function getInterstitialTemplate(url, delay, title, description) {
         </div>
       </div>
       <div class="actions">
-        <a href="${url}" class="btn" id="redirect-btn">绔嬪嵆璺宠浆</a>
-        <button class="btn btn-skip" onclick="skipCountdown()">璺宠繃绛夊緟</button>
+        <a href="${url}" class="btn" id="redirect-btn">立即跳转</a>
+        <button class="btn btn-skip" onclick="skipCountdown()">跳过等待</button>
       </div>
       <div class="f">
         Powered by <a href="/">ShortLink Platform</a>
@@ -385,7 +385,7 @@ function getErrorTemplate(message, code = 404) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>閿欒 - ${code}</title>
+  <title>错误 - ${code}</title>
   <style>
     :root {
       --bg: #e8ebef;
@@ -624,7 +624,7 @@ function getErrorTemplate(message, code = 404) {
         <div class="e">${code}</div>
       </div>
       <div class="m">
-        <h1>璇锋眰澶辫触</h1>
+        <h1>请求失败</h1>
         <p>${message}</p>
       </div>
       <div class="data">
@@ -638,7 +638,7 @@ function getErrorTemplate(message, code = 404) {
         </div>
       </div>
       <div class="actions">
-        <a href="/" class="btn">杩斿洖棣栭〉</a>
+        <a href="/" class="btn">返回首页</a>
       </div>
     </div>
   </div>
@@ -882,7 +882,7 @@ async function serveAdminApp(request, env) {
     if (env.ADMIN_DASHBOARD_URL) {
       return redirectResponse(env.ADMIN_DASHBOARD_URL);
     }
-    return htmlResponse(getErrorTemplate('绠＄悊鍚庡彴鏈厤缃?, 500), 500);
+    return htmlResponse(getErrorTemplate('管理后台未配置', 500), 500);
   }
 
   const url = new URL(request.url);
@@ -1177,20 +1177,20 @@ async function handleLogin(env, request) {
   const { username, password, turnstileToken } = await request.json();
   
   if (!username || !password) {
-    return jsonResponse({ error: '鐢ㄦ埛鍚嶅拰瀵嗙爜涓嶈兘涓虹┖' }, 400);
+    return jsonResponse({ error: '用户名和密码不能为空' }, 400);
   }
 
   if (env.TURNSTILE_SECRET) {
     const ip = getClientIP(request);
     const verified = await verifyTurnstileToken(turnstileToken, env.TURNSTILE_SECRET, ip);
     if (!verified) {
-      return jsonResponse({ error: '浜烘満楠岃瘉澶辫触' }, 403);
+      return jsonResponse({ error: '人机验证失败' }, 403);
     }
   }
   
   const isValid = await authenticateAdmin(env, username, password);
   if (!isValid) {
-    return jsonResponse({ error: '鐢ㄦ埛鍚嶆垨瀵嗙爜閿欒' }, 401);
+    return jsonResponse({ error: '用户名或密码错误' }, 401);
   }
   
   const token = await generateToken({
@@ -1207,20 +1207,20 @@ async function handleLogin(env, request) {
 async function handleCreateLink(env, request) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '鏈巿鏉? }, 401);
+    return jsonResponse({ error: '未授权' }, 401);
   }
   
   const { url, customSuffix, title, description, showInterstitial, delay, expiresAt } = await request.json();
   
   if (!url) {
-    return jsonResponse({ error: 'URL涓嶈兘涓虹┖' }, 400);
+    return jsonResponse({ error: 'URL不能为空' }, 400);
   }
   
   // Validate URL
   try {
     new URL(url);
   } catch (e) {
-    return jsonResponse({ error: '鏃犳晥鐨刄RL鏍煎紡' }, 400);
+    return jsonResponse({ error: '无效的URL格式' }, 400);
   }
   
   let shortCode = customSuffix;
@@ -1235,12 +1235,12 @@ async function handleCreateLink(env, request) {
   } else {
     // Validate custom suffix
     if (!isValidSuffix(shortCode)) {
-      return jsonResponse({ error: '鑷畾涔夊悗缂€鍙兘鍖呭惈瀛楁瘝銆佹暟瀛椼€佷笅鍒掔嚎鍜岃繛瀛楃锛岄暱搴?-32浣? }, 400);
+      return jsonResponse({ error: '自定义后缀只能包含字母、数字、下划线和连字符，长度 1-32 位' }, 400);
     }
     
     // Check if suffix is available
     if (await getLink(env, shortCode)) {
-      return jsonResponse({ error: '璇ュ悗缂€宸茶浣跨敤' }, 409);
+      return jsonResponse({ error: '该后缀已被使用' }, 409);
     }
   }
   
@@ -1271,12 +1271,12 @@ async function handleCreateLink(env, request) {
 async function handleUpdateLink(env, request, shortCode) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '鏈巿鏉? }, 401);
+    return jsonResponse({ error: '未授权' }, 401);
   }
   
   const link = await getLink(env, shortCode);
   if (!link) {
-    return jsonResponse({ error: '鐭摼鎺ヤ笉瀛樺湪' }, 404);
+    return jsonResponse({ error: '短链接不存在' }, 404);
   }
   
   const { url, title, description, showInterstitial, delay, expiresAt, active } = await request.json();
@@ -1286,7 +1286,7 @@ async function handleUpdateLink(env, request, shortCode) {
       new URL(url);
       link.url = url;
     } catch (e) {
-      return jsonResponse({ error: '鏃犳晥鐨刄RL鏍煎紡' }, 400);
+      return jsonResponse({ error: '无效的URL格式' }, 400);
     }
   }
   
@@ -1314,12 +1314,12 @@ async function handleUpdateLink(env, request, shortCode) {
 async function handleDeleteLink(env, request, shortCode) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '鏈巿鏉? }, 401);
+    return jsonResponse({ error: '未授权' }, 401);
   }
   
   const link = await getLink(env, shortCode);
   if (!link) {
-    return jsonResponse({ error: '鐭摼鎺ヤ笉瀛樺湪' }, 404);
+    return jsonResponse({ error: '短链接不存在' }, 404);
   }
   
   await deleteLink(env, shortCode);
@@ -1330,7 +1330,7 @@ async function handleDeleteLink(env, request, shortCode) {
     await env.ANALYTICS_KV.delete(key.name);
   }
   
-  return jsonResponse({ success: true, message: '鐭摼鎺ュ凡鍒犻櫎' });
+  return jsonResponse({ success: true, message: '短链接已删除' });
 }
 
 /**
@@ -1339,12 +1339,12 @@ async function handleDeleteLink(env, request, shortCode) {
 async function handleGetLink(env, request, shortCode) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '鏈巿鏉? }, 401);
+    return jsonResponse({ error: '未授权' }, 401);
   }
   
   const link = await getLink(env, shortCode);
   if (!link) {
-    return jsonResponse({ error: '鐭摼鎺ヤ笉瀛樺湪' }, 404);
+    return jsonResponse({ error: '短链接不存在' }, 404);
   }
   
   return jsonResponse({
@@ -1359,7 +1359,7 @@ async function handleGetLink(env, request, shortCode) {
 async function handleListLinks(env, request) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '鏈巿鏉? }, 401);
+    return jsonResponse({ error: '未授权' }, 401);
   }
   
   const url = new URL(request.url);
@@ -1377,7 +1377,7 @@ async function handleListLinks(env, request) {
 async function handleGetAnalytics(env, request, shortCode) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '鏈巿鏉? }, 401);
+    return jsonResponse({ error: '未授权' }, 401);
   }
   
   const url = new URL(request.url);
@@ -1394,7 +1394,7 @@ async function handleGetAnalytics(env, request, shortCode) {
 async function handleGetStats(env, request) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '鏈巿鏉? }, 401);
+    return jsonResponse({ error: '未授权' }, 401);
   }
   
   const stats = await getDashboardStats(env);
@@ -1408,22 +1408,22 @@ async function handleGetStats(env, request) {
 async function handleChangePassword(env, request) {
   const admin = await verifyAdminToken(env, request);
   if (!admin) {
-    return jsonResponse({ error: '鏈巿鏉? }, 401);
+    return jsonResponse({ error: '未授权' }, 401);
   }
   
   const { oldPassword, newPassword } = await request.json();
   
   if (!oldPassword || !newPassword) {
-    return jsonResponse({ error: '璇锋彁渚涙棫瀵嗙爜鍜屾柊瀵嗙爜' }, 400);
+    return jsonResponse({ error: '请提供旧密码和新密码' }, 400);
   }
   
   if (newPassword.length < 6) {
-    return jsonResponse({ error: '鏂板瘑鐮侀暱搴﹁嚦灏?浣? }, 400);
+    return jsonResponse({ error: '新密码长度至少 6 位' }, 400);
   }
   
   const isValid = await authenticateAdmin(env, admin.username, oldPassword);
   if (!isValid) {
-    return jsonResponse({ error: '鏃у瘑鐮侀敊璇? }, 400);
+    return jsonResponse({ error: '旧密码错误' }, 400);
   }
   
   const adminData = await env.ADMIN_KV.get(`admin:user:${admin.username}`);
@@ -1433,7 +1433,7 @@ async function handleChangePassword(env, request) {
   
   await env.ADMIN_KV.put(`admin:user:${admin.username}`, JSON.stringify(adminUser));
   
-  return jsonResponse({ success: true, message: '瀵嗙爜淇敼鎴愬姛' });
+  return jsonResponse({ success: true, message: '密码修改成功' });
 }
 
 // ==================== Main Request Handler ====================
@@ -1518,17 +1518,17 @@ export default {
       const link = await getLink(env, shortCode);
       
       if (!link) {
-        return htmlResponse(getErrorTemplate('璇ョ煭閾炬帴涓嶅瓨鍦ㄦ垨宸茶繃鏈?, 404), 404);
+        return htmlResponse(getErrorTemplate('该短链接不存在或已过期', 404), 404);
       }
       
       // Check if expired
       if (link.expiresAt && Date.now() > link.expiresAt) {
-        return htmlResponse(getErrorTemplate('璇ョ煭閾炬帴宸茶繃鏈?, 410), 410);
+        return htmlResponse(getErrorTemplate('该短链接已过期', 410), 410);
       }
       
       // Check if inactive
       if (link.active === false) {
-        return htmlResponse(getErrorTemplate('璇ョ煭閾炬帴宸茶绂佺敤', 403), 403);
+        return htmlResponse(getErrorTemplate('该短链接已被禁用', 403), 403);
       }
       
       // Record click (fire and forget)
