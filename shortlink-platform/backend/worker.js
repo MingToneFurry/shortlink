@@ -556,6 +556,35 @@ function redirectResponse(url, status = 302) {
   return Response.redirect(url, status);
 }
 
+/**
+ * Serve admin SPA and static assets from the Worker
+ */
+async function serveAdminApp(request, env) {
+  if (!env.ASSETS || typeof env.ASSETS.fetch !== 'function') {
+    if (env.ADMIN_DASHBOARD_URL) {
+      return redirectResponse(env.ADMIN_DASHBOARD_URL);
+    }
+    return htmlResponse(getErrorTemplate('管理后台未配置', 500), 500);
+  }
+
+  const url = new URL(request.url);
+  if (url.pathname.startsWith(CONFIG.ADMIN_PATH)) {
+    const stripped = url.pathname.slice(CONFIG.ADMIN_PATH.length);
+    url.pathname = stripped.startsWith('/') ? stripped : `/${stripped}`;
+    if (url.pathname === '') {
+      url.pathname = '/';
+    }
+  }
+
+  let response = await env.ASSETS.fetch(new Request(url.toString(), request));
+  if (response.status === 404) {
+    url.pathname = '/index.html';
+    response = await env.ASSETS.fetch(new Request(url.toString(), request));
+  }
+
+  return response;
+}
+
 // ==================== Database Operations ====================
 
 /**
@@ -1189,19 +1218,7 @@ export default {
       }
     }
     
-    // Admin dashboard - serve the React app
-    if (path === CONFIG.ADMIN_PATH || path.startsWith(CONFIG.ADMIN_PATH + '/')) {
-      // In production, this would serve the built React app
-      // For now, redirect to the deployed admin dashboard
-      return redirectResponse(env.ADMIN_DASHBOARD_URL || '/');
-    }
-    
-    // Root path - redirect to admin
-    if (path === '/') {
-      return redirectResponse(CONFIG.ADMIN_PATH);
-    }
-    
-    // 404 for everything else
-    return htmlResponse(getErrorTemplate('页面未找到', 404), 404);
+    // Serve admin dashboard and static assets (SPA fallback)
+    return serveAdminApp(request, env);
   }
 };

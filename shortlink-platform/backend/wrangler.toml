@@ -10,6 +10,10 @@ account_id = "a2aa832490a332300a12ac0c12ad49e6"
 BASE_URL = "https://your-worker.your-subdomain.workers.dev"
 ADMIN_DASHBOARD_URL = "https://your-admin-dashboard-url.pages.dev"
 
+[assets]
+directory = "../admin-dashboard/dist"
+binding = "ASSETS"
+
 # KV Namespaces
 [[kv_namespaces]]
 binding = "LINKS_KV"
