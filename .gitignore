@@ -47,7 +47,6 @@ tmp/
 
 # OS files
 Thumbs.db
-.DS_Store
 
 # Cloudflare Workers
 .dev.vars

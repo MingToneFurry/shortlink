@@ -11,8 +11,8 @@ A sensitive `.env` file containing actual API configuration was accidentally com
 ## File Removed
 - **Path:** `shortlink-platform/admin-dashboard/.env`
 - **Contained:** 
-  - `VITE_API_BASE_URL=https://6i.gg`
-  - `VITE_TURNSTILE_SITE_KEY=0x4AAAAAAA0KjvSHcJKZV9JU`
+  - `VITE_API_BASE_URL=<redacted production URL>`
+  - `VITE_TURNSTILE_SITE_KEY=<redacted site key>`
 
 ## Additional Actions Required
 ⚠️ **Important:** The sensitive data still exists in git history (commit `0738f71`). To completely remove it:
