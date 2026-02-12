@@ -22,7 +22,7 @@ Repository maintainers should run the following commands on the main branch:
 
 ```bash
 # Backup your repository first!
-git clone --mirror https://github.com/MingToneFurry/shortlink.git
+git clone --mirror https://github.com/YOUR_USERNAME/YOUR_REPO.git
 
 # Use git-filter-repo to remove the file from all history
 pip install git-filter-repo
@@ -37,7 +37,7 @@ git push --force --tags origin
 Even after removing from git history, the exposed credentials should be rotated:
 
 1. **Generate new Turnstile site key** in Cloudflare dashboard
-2. **Update the Worker URL** if using the domain `6i.gg` for production
+2. **Update the Worker URL** if needed for your production environment
 3. **Update all deployment configurations** with new credentials
 
 ### Option 3: If history rewrite is not possible
